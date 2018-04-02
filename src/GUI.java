@@ -17,11 +17,13 @@ public class GUI extends JFrame {
 
     private final static int LEFT_WIDTH = 500;
     private final static int RIGHT_WIDTH = 300;
+    private final static int GEN_HEIGHT = 250;
+    private final static int PATHWAY_HEIGHT = 350;
+    private final static int GENE_INFO_HEIGHT = GEN_HEIGHT * 9/16;
+    private final static int REACTION_INFO_HEIGHT = GEN_HEIGHT * 2/3;
 
     // Genome browser
     private JPanel gen_global_panel;
-    private final static int GEN_HIGHT = 250;
-    private final static int PATHWAY_HIGHT = 350;
 
     private JPanel gen_left_panel;
     private JPanel gen_left_menu;
@@ -95,13 +97,38 @@ public class GUI extends JFrame {
     genome_display = new JScrollPane();
     gen_left_panel.add(genome_display);
 
-    gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HIGHT));
-    gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HIGHT));
+    gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
+    gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
 
 
+    //Genome browser right panel
+    gen_right_panel = new JPanel();
+    gen_right_panel.setLayout(new BoxLayout(gen_right_panel, BoxLayout.PAGE_AXIS));
+    gen_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+    gen_right_panel.add(new JLabel("Gene Information"));
+
+    gene_information = new JScrollPane();
+    gen_right_panel.add(gene_information);
+    gene_information.setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
+    gene_information.setMaximumSize(new Dimension(gene_information.getMaximumSize().width,
+						  GENE_INFO_HEIGHT));
+
+    gen_right_panel.add(new JLabel("Involved in reaction(s)"));
+
+    involved_in_reactions = new JScrollPane();
+    gen_right_panel.add(involved_in_reactions);
+
+    gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+    gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+
+
+    
     gen_global_panel = new JPanel();
     gen_global_panel.setLayout(new BoxLayout(gen_global_panel, BoxLayout.LINE_AXIS));
+    gen_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     gen_global_panel.add(gen_left_panel);
+    gen_global_panel.add(Box.createHorizontalGlue());
+    gen_global_panel.add(gen_right_panel);
 
     Container cp = getContentPane();
     cp.add(gen_global_panel);
