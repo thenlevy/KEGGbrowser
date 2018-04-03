@@ -46,9 +46,10 @@ public class GUI extends JFrame {
     private JPanel pathway_left_menu;
     private JTextField pathway_species_field;
     private final static int PATHWAY_SPECIES_FIELD_LENGTH = 4;
-    private JTextField pathway_genID_field;
-    private final static int PATHWAY_GENID_FIELD_LENGTH = 6;
+    private JTextField pathway_mapID_field;
+    private final static int PATHWAY_MAPID_FIELD_LENGTH = 6;
     private JButton pathway_search_btn;
+    private JScrollPane pathway_display;
 
     private JPanel pathway_right_panel;
     private JPanel pathway_right_menu;
@@ -60,6 +61,7 @@ public class GUI extends JFrame {
 
     //Genome browser
 
+    //=============================================================================================
     // Genome browser left menu
     gen_left_menu = new JPanel();
     gen_left_menu.setLayout(new BoxLayout(gen_left_menu, BoxLayout.LINE_AXIS));
@@ -88,7 +90,9 @@ public class GUI extends JFrame {
 						 gen_search_btn.getPreferredSize().height));
     gen_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
 						 gen_search_btn.getPreferredSize().height));
+    //=============================================================================================
 
+    //=============================================================================================
     //Genome browser left panel
     gen_left_panel = new JPanel();
     gen_left_panel.setLayout(new BoxLayout(gen_left_panel, BoxLayout.PAGE_AXIS));
@@ -99,8 +103,10 @@ public class GUI extends JFrame {
 
     gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
     gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
+    //=============================================================================================
 
 
+    //=============================================================================================
     //Genome browser right panel
     gen_right_panel = new JPanel();
     gen_right_panel.setLayout(new BoxLayout(gen_right_panel, BoxLayout.PAGE_AXIS));
@@ -120,9 +126,9 @@ public class GUI extends JFrame {
 
     gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
     gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+    //=============================================================================================
+    //Genome browser global
 
-
-    
     gen_global_panel = new JPanel();
     gen_global_panel.setLayout(new BoxLayout(gen_global_panel, BoxLayout.LINE_AXIS));
     gen_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -130,8 +136,61 @@ public class GUI extends JFrame {
     gen_global_panel.add(Box.createHorizontalGlue());
     gen_global_panel.add(gen_right_panel);
 
+    //=============================================================================================
+    //Pathway browser left menu
+    pathway_left_menu = new JPanel();
+    pathway_left_menu.setLayout(new BoxLayout(pathway_left_menu, BoxLayout.LINE_AXIS));
+    pathway_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+    pathway_left_menu.add(new JLabel("Pathway Browser"));
+    pathway_left_menu.add(Box.createHorizontalGlue());
+    pathway_left_menu.add(new JLabel("Species"));
+
+    pathway_species_field = new JTextField(PATHWAY_SPECIES_FIELD_LENGTH);
+    pathway_species_field.setColumns(PATHWAY_SPECIES_FIELD_LENGTH);
+    pathway_species_field.setMaximumSize(pathway_species_field.getPreferredSize());
+    pathway_left_menu.add(pathway_species_field);
+
+    pathway_left_menu.add(new JLabel("Map ID"));
+
+    pathway_mapID_field = new JTextField(PATHWAY_MAPID_FIELD_LENGTH);
+    pathway_mapID_field.setColumns(PATHWAY_MAPID_FIELD_LENGTH);
+    pathway_mapID_field.setMaximumSize(pathway_mapID_field.getPreferredSize());
+    pathway_left_menu.add(pathway_mapID_field);
+    pathway_left_menu.add(Box.createHorizontalGlue());
+
+    pathway_search_btn = new JButton("Search");
+    pathway_left_menu.add(pathway_search_btn);
+
+    pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
+						 gen_search_btn.getPreferredSize().height));
+    pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
+						 gen_search_btn.getPreferredSize().height));
+    //=============================================================================================
+    //Pathway browser left panel
+    pathway_left_panel = new JPanel();
+    pathway_left_panel.setLayout(new BoxLayout(pathway_left_panel, BoxLayout.PAGE_AXIS));
+    pathway_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+    pathway_left_panel.add(pathway_left_menu);
+    pathway_display = new JScrollPane();
+    pathway_left_panel.add(pathway_display);
+
+    pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+    pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+    //=============================================================================================
+
+    pathway_global_panel = new JPanel();
+    pathway_global_panel.setLayout(new BoxLayout(pathway_global_panel, BoxLayout.LINE_AXIS));
+    pathway_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    pathway_global_panel.add(pathway_left_panel);
+    pathway_global_panel.add(Box.createHorizontalGlue());
+    
+
+
     Container cp = getContentPane();
+    cp.setLayout(new BoxLayout(cp, BoxLayout.PAGE_AXIS));
     cp.add(gen_global_panel);
+    cp.add(Box.createVerticalGlue());
+    cp.add(pathway_global_panel);
     
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setTitle("KEGG browser");
