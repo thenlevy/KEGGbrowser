@@ -12,21 +12,25 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Component;
 
+/**
+ * Graphical interface for KEGGbrowser
+ */
 public class GUI extends JFrame {
-
-
-    private final static int LEFT_WIDTH = 500;
-    private final static int RIGHT_WIDTH = 300;
-    private final static int GEN_HEIGHT = 250;
-    private final static int PATHWAY_HEIGHT = 350;
+    private final static int LEFT_WIDTH = 500; // Width of the left part
+    private final static int RIGHT_WIDTH = 300; // Width of the right part 
+    private final static int GEN_HEIGHT = 250;  // Height of the 'genome browser'
+    private final static int PATHWAY_HEIGHT = 350; // Height of the 'pathway browser'
     private final static int GENE_INFO_HEIGHT = GEN_HEIGHT * 9/16;
-    private final static int REACTION_INFO_HEIGHT = GEN_HEIGHT * 2/3;
+    // Height of the 'Gene information' panel
 
-    // Genome browser
-    private JPanel gen_global_panel;
+    private final static int REACTION_INFO_HEIGHT = PATHWAY_HEIGHT * 4/10;
+    // Height of the 'Reaction information' panel
 
-    private JPanel gen_left_panel;
-    private JPanel gen_left_menu;
+    // Genome browser componenet
+    private JPanel gen_global_panel; // Whole genome browser
+
+    private JPanel gen_left_panel; // left part of the genome browser
+    private JPanel gen_left_menu; 
     private JTextField gen_species_field;
     private final static int GEN_SPECIES_FIELD_LENGTH = 4;
     private JTextField gen_genID_field;
@@ -34,15 +38,15 @@ public class GUI extends JFrame {
     private JButton gen_search_btn;
     private JScrollPane genome_display;
 
-    private JPanel gen_right_panel;
+    private JPanel gen_right_panel; // right part of the genome browser
     private JPanel gen_right_menu;
     private JScrollPane gene_information;
     private JScrollPane involved_in_reactions;
 
-    // Pathway browser
-    private JPanel pathway_global_panel;
+    // Pathway browser component
+    private JPanel pathway_global_panel; // Whole pathway browser
 
-    private JPanel pathway_left_panel;
+    private JPanel pathway_left_panel; // left part of the pathway browser
     private JPanel pathway_left_menu;
     private JTextField pathway_species_field;
     private final static int PATHWAY_SPECIES_FIELD_LENGTH = 4;
@@ -141,6 +145,7 @@ public class GUI extends JFrame {
     pathway_left_menu = new JPanel();
     pathway_left_menu.setLayout(new BoxLayout(pathway_left_menu, BoxLayout.LINE_AXIS));
     pathway_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+
     pathway_left_menu.add(new JLabel("Pathway Browser"));
     pathway_left_menu.add(Box.createHorizontalGlue());
     pathway_left_menu.add(new JLabel("Species"));
@@ -162,9 +167,9 @@ public class GUI extends JFrame {
     pathway_left_menu.add(pathway_search_btn);
 
     pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
-						 gen_search_btn.getPreferredSize().height));
+						     gen_search_btn.getPreferredSize().height));
     pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
-						 gen_search_btn.getPreferredSize().height));
+						   gen_search_btn.getPreferredSize().height));
     //=============================================================================================
     //Pathway browser left panel
     pathway_left_panel = new JPanel();
@@ -177,12 +182,46 @@ public class GUI extends JFrame {
     pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
     pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
     //=============================================================================================
+    //Pathway browser right menu
+    pathway_right_menu = new JPanel();
+    pathway_right_menu.setLayout(new BoxLayout(pathway_right_menu, BoxLayout.LINE_AXIS));
+    pathway_right_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    pathway_right_menu.add(new JLabel("Reaction information"));
+    pathway_right_menu.add(Box.createHorizontalGlue());
+    pathway_image_btn = new JButton("Image");
+    pathway_right_menu.add(pathway_image_btn);
+    pathway_right_menu.setPreferredSize(new Dimension(RIGHT_WIDTH,
+						      pathway_image_btn.getPreferredSize().height));
+    pathway_right_menu.setMaximumSize(new Dimension(RIGHT_WIDTH,
+						    pathway_image_btn.getPreferredSize().height));
+    //=============================================================================================
+    //Pathway browser right panel
+    pathway_right_panel = new JPanel();
+    pathway_right_panel.setLayout(new BoxLayout(pathway_right_panel, BoxLayout.PAGE_AXIS));
+    pathway_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+
+    pathway_right_panel.add(pathway_right_menu);
+    reaction_information = new JScrollPane();
+    reaction_information.setPreferredSize(new Dimension(RIGHT_WIDTH, REACTION_INFO_HEIGHT));
+    reaction_information.setPreferredSize(new Dimension(reaction_information.getMaximumSize().width,
+							REACTION_INFO_HEIGHT));
+    pathway_right_panel.add(reaction_information);
+    pathway_right_panel.add(new JLabel("Involvs gene(s)"));
+
+    involves_gens = new JScrollPane();
+    pathway_right_panel.add(involves_gens);
+    pathway_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
+    pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
+    //=============================================================================================
+    // Pathway browser global
 
     pathway_global_panel = new JPanel();
     pathway_global_panel.setLayout(new BoxLayout(pathway_global_panel, BoxLayout.LINE_AXIS));
     pathway_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
     pathway_global_panel.add(pathway_left_panel);
     pathway_global_panel.add(Box.createHorizontalGlue());
+    pathway_global_panel.add(pathway_right_panel);
     
 
 
