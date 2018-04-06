@@ -1,4 +1,3 @@
-import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,6 +10,8 @@ import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * Graphical interface for KEGGbrowser
@@ -77,11 +78,9 @@ public class GUI extends JFrame {
 	gen_left_menu.add(Box.createHorizontalGlue());
 	gen_left_menu.add(new JLabel("Species"));
 
-	gen_species_field = new JTextField(GEN_SPECIES_FIELD_LENGTH);
-	gen_species_field.setColumns(GEN_SPECIES_FIELD_LENGTH);
-	gen_species_field.setMaximumSize(gen_species_field.getPreferredSize());
-	gen_left_menu.add(gen_species_field);
 
+	gen_species_field = new Gen_species_field();
+	gen_left_menu.add(gen_species_field);
 	gen_left_menu.add(new JLabel("Gene ID"));
 
 	gen_genID_field = new JTextField(GEN_GENID_FIELD_LENGTH);
@@ -90,7 +89,7 @@ public class GUI extends JFrame {
 	gen_left_menu.add(gen_genID_field);
 	gen_left_menu.add(Box.createHorizontalGlue());
 
-	gen_search_btn = new JButton("Search");
+	gen_search_btn = new Gen_search_button();
 	gen_left_menu.add(gen_search_btn);
 
 	gen_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
@@ -241,6 +240,7 @@ public class GUI extends JFrame {
 
 	refresh_gui();
 	}
+
     private void refresh_gui() {
 	gen_species_field.setText(browser.get_gen_species());
 	gen_genID_field.setText(browser.get_gen_genID());
@@ -250,5 +250,29 @@ public class GUI extends JFrame {
 	repaint();
     }
 
+    private class Gen_species_field extends JTextField implements ActionListener {
+	public Gen_species_field() {
+	    super(GEN_SPECIES_FIELD_LENGTH);
+	    setColumns(GEN_SPECIES_FIELD_LENGTH);
+	    setMaximumSize(getPreferredSize());
+	    addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	    browser.set_gen_species(getText());
+	}
+	
+    }
+
+    private class Gen_search_button extends JButton implements ActionListener {
+	public Gen_search_button() {
+	    super("Search");
+	    addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	    browser.gen_search();
+	}
+    }
 }
 
