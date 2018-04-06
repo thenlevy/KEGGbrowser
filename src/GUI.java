@@ -83,9 +83,7 @@ public class GUI extends JFrame {
 	gen_left_menu.add(gen_species_field);
 	gen_left_menu.add(new JLabel("Gene ID"));
 
-	gen_genID_field = new JTextField(GEN_GENID_FIELD_LENGTH);
-	gen_genID_field.setColumns(GEN_GENID_FIELD_LENGTH);
-	gen_genID_field.setMaximumSize(gen_genID_field.getPreferredSize());
+	gen_genID_field = new Gen_genID_field();
 	gen_left_menu.add(gen_genID_field);
 	gen_left_menu.add(Box.createHorizontalGlue());
 
@@ -250,18 +248,21 @@ public class GUI extends JFrame {
 	repaint();
     }
 
-    private class Gen_species_field extends JTextField implements ActionListener {
+    private class Gen_species_field extends JTextField{
 	public Gen_species_field() {
 	    super(GEN_SPECIES_FIELD_LENGTH);
 	    setColumns(GEN_SPECIES_FIELD_LENGTH);
 	    setMaximumSize(getPreferredSize());
-	    addActionListener(this);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-	    browser.set_gen_species(getText());
 	}
 	
+    }
+
+    private class Gen_genID_field extends JTextField {
+	public Gen_genID_field() {
+	    super(GEN_GENID_FIELD_LENGTH);
+	    setColumns(GEN_GENID_FIELD_LENGTH);
+	    setMaximumSize(getPreferredSize());
+	}
     }
 
     private class Gen_search_button extends JButton implements ActionListener {
@@ -271,6 +272,8 @@ public class GUI extends JFrame {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+	    browser.set_gen_species(gen_species_field.getText());
+	    browser.set_gen_genID(gen_genID_field.getText());
 	    browser.gen_search();
 	}
     }
