@@ -16,6 +16,8 @@ import java.awt.Component;
  * Graphical interface for KEGGbrowser
  */
 public class GUI extends JFrame {
+    private Browser browser;
+
     private final static int LEFT_WIDTH = 500; // Width of the left part
     private final static int RIGHT_WIDTH = 300; // Width of the right part 
     private final static int GEN_HEIGHT = 250;  // Height of the 'genome browser'
@@ -61,190 +63,192 @@ public class GUI extends JFrame {
     private JScrollPane reaction_information;
     private JScrollPane involves_gens;
 
-    public GUI() {
+    public GUI(Browser b) {
+	browser = b;
 
-    //Genome browser
+	//Genome browser
 
-    //=============================================================================================
-    // Genome browser left menu
-    gen_left_menu = new JPanel();
-    gen_left_menu.setLayout(new BoxLayout(gen_left_menu, BoxLayout.LINE_AXIS));
-    gen_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
-    gen_left_menu.add(new JLabel("Genome Browser"));
-    gen_left_menu.add(Box.createHorizontalGlue());
-    gen_left_menu.add(new JLabel("Species"));
+	//=============================================================================================
+	// Genome browser left menu
+	gen_left_menu = new JPanel();
+	gen_left_menu.setLayout(new BoxLayout(gen_left_menu, BoxLayout.LINE_AXIS));
+	gen_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+	gen_left_menu.add(new JLabel("Genome Browser"));
+	gen_left_menu.add(Box.createHorizontalGlue());
+	gen_left_menu.add(new JLabel("Species"));
 
-    gen_species_field = new JTextField(GEN_SPECIES_FIELD_LENGTH);
-    gen_species_field.setColumns(GEN_SPECIES_FIELD_LENGTH);
-    gen_species_field.setMaximumSize(gen_species_field.getPreferredSize());
-    gen_left_menu.add(gen_species_field);
+	gen_species_field = new JTextField(GEN_SPECIES_FIELD_LENGTH);
+	gen_species_field.setColumns(GEN_SPECIES_FIELD_LENGTH);
+	gen_species_field.setMaximumSize(gen_species_field.getPreferredSize());
+	gen_left_menu.add(gen_species_field);
 
-    gen_left_menu.add(new JLabel("Gene ID"));
+	gen_left_menu.add(new JLabel("Gene ID"));
 
-    gen_genID_field = new JTextField(GEN_GENID_FIELD_LENGTH);
-    gen_genID_field.setColumns(GEN_GENID_FIELD_LENGTH);
-    gen_genID_field.setMaximumSize(gen_genID_field.getPreferredSize());
-    gen_left_menu.add(gen_genID_field);
-    gen_left_menu.add(Box.createHorizontalGlue());
+	gen_genID_field = new JTextField(GEN_GENID_FIELD_LENGTH);
+	gen_genID_field.setColumns(GEN_GENID_FIELD_LENGTH);
+	gen_genID_field.setMaximumSize(gen_genID_field.getPreferredSize());
+	gen_left_menu.add(gen_genID_field);
+	gen_left_menu.add(Box.createHorizontalGlue());
 
-    gen_search_btn = new JButton("Search");
-    gen_left_menu.add(gen_search_btn);
+	gen_search_btn = new JButton("Search");
+	gen_left_menu.add(gen_search_btn);
 
-    gen_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
-						 gen_search_btn.getPreferredSize().height));
-    gen_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
-						 gen_search_btn.getPreferredSize().height));
-    //=============================================================================================
+	gen_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
+						    gen_search_btn.getPreferredSize().height));
+	gen_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
+						    gen_search_btn.getPreferredSize().height));
+	//=============================================================================================
 
-    //=============================================================================================
-    //Genome browser left panel
-    gen_left_panel = new JPanel();
-    gen_left_panel.setLayout(new BoxLayout(gen_left_panel, BoxLayout.PAGE_AXIS));
-    gen_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
-    gen_left_panel.add(gen_left_menu);
-    genome_display = new JScrollPane();
-    gen_left_panel.add(genome_display);
+	//=============================================================================================
+	//Genome browser left panel
+	gen_left_panel = new JPanel();
+	gen_left_panel.setLayout(new BoxLayout(gen_left_panel, BoxLayout.PAGE_AXIS));
+	gen_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+	gen_left_panel.add(gen_left_menu);
+	genome_display = new JScrollPane();
+	gen_left_panel.add(genome_display);
 
-    gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
-    gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
-    //=============================================================================================
-
-
-    //=============================================================================================
-    //Genome browser right panel
-    gen_right_panel = new JPanel();
-    gen_right_panel.setLayout(new BoxLayout(gen_right_panel, BoxLayout.PAGE_AXIS));
-    gen_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
-    gen_right_panel.add(new JLabel("Gene Information"));
-
-    gene_information = new JScrollPane();
-    gen_right_panel.add(gene_information);
-    gene_information.setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
-    gene_information.setMaximumSize(new Dimension(gene_information.getMaximumSize().width,
-						  GENE_INFO_HEIGHT));
-
-    gen_right_panel.add(new JLabel("Involved in reaction(s)"));
-
-    involved_in_reactions = new JScrollPane();
-    gen_right_panel.add(involved_in_reactions);
-
-    gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
-    gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
-    //=============================================================================================
-    //Genome browser global
-
-    gen_global_panel = new JPanel();
-    gen_global_panel.setLayout(new BoxLayout(gen_global_panel, BoxLayout.LINE_AXIS));
-    gen_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    gen_global_panel.add(gen_left_panel);
-    gen_global_panel.add(Box.createHorizontalGlue());
-    gen_global_panel.add(gen_right_panel);
-
-    //=============================================================================================
-    //Pathway browser left menu
-    pathway_left_menu = new JPanel();
-    pathway_left_menu.setLayout(new BoxLayout(pathway_left_menu, BoxLayout.LINE_AXIS));
-    pathway_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-    pathway_left_menu.add(new JLabel("Pathway Browser"));
-    pathway_left_menu.add(Box.createHorizontalGlue());
-    pathway_left_menu.add(new JLabel("Species"));
-
-    pathway_species_field = new JTextField(PATHWAY_SPECIES_FIELD_LENGTH);
-    pathway_species_field.setColumns(PATHWAY_SPECIES_FIELD_LENGTH);
-    pathway_species_field.setMaximumSize(pathway_species_field.getPreferredSize());
-    pathway_left_menu.add(pathway_species_field);
-
-    pathway_left_menu.add(new JLabel("Map ID"));
-
-    pathway_mapID_field = new JTextField(PATHWAY_MAPID_FIELD_LENGTH);
-    pathway_mapID_field.setColumns(PATHWAY_MAPID_FIELD_LENGTH);
-    pathway_mapID_field.setMaximumSize(pathway_mapID_field.getPreferredSize());
-    pathway_left_menu.add(pathway_mapID_field);
-    pathway_left_menu.add(Box.createHorizontalGlue());
-
-    pathway_search_btn = new JButton("Search");
-    pathway_left_menu.add(pathway_search_btn);
-
-    pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
-						     gen_search_btn.getPreferredSize().height));
-    pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
-						   gen_search_btn.getPreferredSize().height));
-    //=============================================================================================
-    //Pathway browser left panel
-    pathway_left_panel = new JPanel();
-    pathway_left_panel.setLayout(new BoxLayout(pathway_left_panel, BoxLayout.PAGE_AXIS));
-    pathway_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
-    pathway_left_panel.add(pathway_left_menu);
-    pathway_display = new JScrollPane();
-    pathway_left_panel.add(pathway_display);
-
-    pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
-    pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
-    //=============================================================================================
-    //Pathway browser right menu
-    pathway_right_menu = new JPanel();
-    pathway_right_menu.setLayout(new BoxLayout(pathway_right_menu, BoxLayout.LINE_AXIS));
-    pathway_right_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-    pathway_right_menu.add(new JLabel("Reaction information"));
-    pathway_right_menu.add(Box.createHorizontalGlue());
-    pathway_image_btn = new JButton("Image");
-    pathway_right_menu.add(pathway_image_btn);
-    pathway_right_menu.setPreferredSize(new Dimension(RIGHT_WIDTH,
-						      pathway_image_btn.getPreferredSize().height));
-    pathway_right_menu.setMaximumSize(new Dimension(RIGHT_WIDTH,
-						    pathway_image_btn.getPreferredSize().height));
-    //=============================================================================================
-    //Pathway browser right panel
-    pathway_right_panel = new JPanel();
-    pathway_right_panel.setLayout(new BoxLayout(pathway_right_panel, BoxLayout.PAGE_AXIS));
-    pathway_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
-
-    pathway_right_panel.add(pathway_right_menu);
-    reaction_information = new JScrollPane();
-    reaction_information.setPreferredSize(new Dimension(RIGHT_WIDTH, REACTION_INFO_HEIGHT));
-    reaction_information.setPreferredSize(new Dimension(reaction_information.getMaximumSize().width,
-							REACTION_INFO_HEIGHT));
-    pathway_right_panel.add(reaction_information);
-    pathway_right_panel.add(new JLabel("Involvs gene(s)"));
-
-    involves_gens = new JScrollPane();
-    pathway_right_panel.add(involves_gens);
-    pathway_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
-    pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
-    //=============================================================================================
-    // Pathway browser global
-
-    pathway_global_panel = new JPanel();
-    pathway_global_panel.setLayout(new BoxLayout(pathway_global_panel, BoxLayout.LINE_AXIS));
-    pathway_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    pathway_global_panel.add(pathway_left_panel);
-    pathway_global_panel.add(Box.createHorizontalGlue());
-    pathway_global_panel.add(pathway_right_panel);
-    
+	gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
+	gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
+	//=============================================================================================
 
 
-    Container cp = getContentPane();
-    cp.setLayout(new BoxLayout(cp, BoxLayout.PAGE_AXIS));
-    cp.add(gen_global_panel);
-    cp.add(Box.createVerticalGlue());
-    cp.add(pathway_global_panel);
-    
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setTitle("KEGG browser");
-    setSize(800, 600);
-    setVisible(true);
+	//=============================================================================================
+	//Genome browser right panel
+	gen_right_panel = new JPanel();
+	gen_right_panel.setLayout(new BoxLayout(gen_right_panel, BoxLayout.PAGE_AXIS));
+	gen_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+	gen_right_panel.add(new JLabel("Gene Information"));
+
+	gene_information = new JScrollPane();
+	gen_right_panel.add(gene_information);
+	gene_information.setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
+	gene_information.setMaximumSize(new Dimension(gene_information.getMaximumSize().width,
+						    GENE_INFO_HEIGHT));
+
+	gen_right_panel.add(new JLabel("Involved in reaction(s)"));
+
+	involved_in_reactions = new JScrollPane();
+	gen_right_panel.add(involved_in_reactions);
+
+	gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+	gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+	//=============================================================================================
+	//Genome browser global
+
+	gen_global_panel = new JPanel();
+	gen_global_panel.setLayout(new BoxLayout(gen_global_panel, BoxLayout.LINE_AXIS));
+	gen_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+	gen_global_panel.add(gen_left_panel);
+	gen_global_panel.add(Box.createHorizontalGlue());
+	gen_global_panel.add(gen_right_panel);
+
+	//=============================================================================================
+	//Pathway browser left menu
+	pathway_left_menu = new JPanel();
+	pathway_left_menu.setLayout(new BoxLayout(pathway_left_menu, BoxLayout.LINE_AXIS));
+	pathway_left_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	pathway_left_menu.add(new JLabel("Pathway Browser"));
+	pathway_left_menu.add(Box.createHorizontalGlue());
+	pathway_left_menu.add(new JLabel("Species"));
+
+	pathway_species_field = new JTextField(PATHWAY_SPECIES_FIELD_LENGTH);
+	pathway_species_field.setColumns(PATHWAY_SPECIES_FIELD_LENGTH);
+	pathway_species_field.setMaximumSize(pathway_species_field.getPreferredSize());
+	pathway_left_menu.add(pathway_species_field);
+
+	pathway_left_menu.add(new JLabel("Map ID"));
+
+	pathway_mapID_field = new JTextField(PATHWAY_MAPID_FIELD_LENGTH);
+	pathway_mapID_field.setColumns(PATHWAY_MAPID_FIELD_LENGTH);
+	pathway_mapID_field.setMaximumSize(pathway_mapID_field.getPreferredSize());
+	pathway_left_menu.add(pathway_mapID_field);
+	pathway_left_menu.add(Box.createHorizontalGlue());
+
+	pathway_search_btn = new JButton("Search");
+	pathway_left_menu.add(pathway_search_btn);
+
+	pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
+							gen_search_btn.getPreferredSize().height));
+	pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
+						    gen_search_btn.getPreferredSize().height));
+	//=============================================================================================
+	//Pathway browser left panel
+	pathway_left_panel = new JPanel();
+	pathway_left_panel.setLayout(new BoxLayout(pathway_left_panel, BoxLayout.PAGE_AXIS));
+	pathway_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+	pathway_left_panel.add(pathway_left_menu);
+	pathway_display = new JScrollPane();
+	pathway_left_panel.add(pathway_display);
+
+	pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+	pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+	//=============================================================================================
+	//Pathway browser right menu
+	pathway_right_menu = new JPanel();
+	pathway_right_menu.setLayout(new BoxLayout(pathway_right_menu, BoxLayout.LINE_AXIS));
+	pathway_right_menu.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+	pathway_right_menu.add(new JLabel("Reaction information"));
+	pathway_right_menu.add(Box.createHorizontalGlue());
+	pathway_image_btn = new JButton("Image");
+	pathway_right_menu.add(pathway_image_btn);
+	pathway_right_menu.setPreferredSize(new Dimension(RIGHT_WIDTH,
+							pathway_image_btn.getPreferredSize().height));
+	pathway_right_menu.setMaximumSize(new Dimension(RIGHT_WIDTH,
+							pathway_image_btn.getPreferredSize().height));
+	//=============================================================================================
+	//Pathway browser right panel
+	pathway_right_panel = new JPanel();
+	pathway_right_panel.setLayout(new BoxLayout(pathway_right_panel, BoxLayout.PAGE_AXIS));
+	pathway_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
+
+	pathway_right_panel.add(pathway_right_menu);
+	reaction_information = new JScrollPane();
+	reaction_information.setPreferredSize(new Dimension(RIGHT_WIDTH, REACTION_INFO_HEIGHT));
+	reaction_information.setPreferredSize(new Dimension(reaction_information.getMaximumSize().width,
+							    REACTION_INFO_HEIGHT));
+	pathway_right_panel.add(reaction_information);
+	pathway_right_panel.add(new JLabel("Involvs gene(s)"));
+
+	involves_gens = new JScrollPane();
+	pathway_right_panel.add(involves_gens);
+	pathway_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
+	pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
+	//=============================================================================================
+	// Pathway browser global
+
+	pathway_global_panel = new JPanel();
+	pathway_global_panel.setLayout(new BoxLayout(pathway_global_panel, BoxLayout.LINE_AXIS));
+	pathway_global_panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+	pathway_global_panel.add(pathway_left_panel);
+	pathway_global_panel.add(Box.createHorizontalGlue());
+	pathway_global_panel.add(pathway_right_panel);
+
+
+
+	Container cp = getContentPane();
+	cp.setLayout(new BoxLayout(cp, BoxLayout.PAGE_AXIS));
+	cp.add(gen_global_panel);
+	cp.add(Box.createVerticalGlue());
+	cp.add(pathway_global_panel);
+
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setTitle("KEGG browser");
+	setSize(800, 600);
+	setVisible(true);
+
+	refresh_gui();
+	}
+    private void refresh_gui() {
+	gen_species_field.setText(browser.get_gen_species());
+	gen_genID_field.setText(browser.get_gen_genID());
+	pathway_species_field.setText(browser.get_pathway_species());
+	pathway_mapID_field.setText(browser.get_pathway_mapID());
+
+	repaint();
     }
 
-    public static void main(String[] args) {
-
-	SwingUtilities.invokeLater(new Runnable() {
-		@Override
-		public void run() {
-		    new GUI();
-		}
-	    });
-    }
 }
 
