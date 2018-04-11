@@ -150,26 +150,22 @@ public class GUI extends JFrame {
 	pathway_left_menu.add(Box.createHorizontalGlue());
 	pathway_left_menu.add(new JLabel("Species"));
 
-	pathway_species_field = new JTextField(PATHWAY_SPECIES_FIELD_LENGTH);
-	pathway_species_field.setColumns(PATHWAY_SPECIES_FIELD_LENGTH);
-	pathway_species_field.setMaximumSize(pathway_species_field.getPreferredSize());
+	pathway_species_field = new Pathway_species_field();
 	pathway_left_menu.add(pathway_species_field);
 
 	pathway_left_menu.add(new JLabel("Map ID"));
 
-	pathway_mapID_field = new JTextField(PATHWAY_MAPID_FIELD_LENGTH);
-	pathway_mapID_field.setColumns(PATHWAY_MAPID_FIELD_LENGTH);
-	pathway_mapID_field.setMaximumSize(pathway_mapID_field.getPreferredSize());
+	pathway_mapID_field = new Pathway_mapID_field();
 	pathway_left_menu.add(pathway_mapID_field);
 	pathway_left_menu.add(Box.createHorizontalGlue());
 
-	pathway_search_btn = new JButton("Search");
+	pathway_search_btn = new Pathway_search_button();
 	pathway_left_menu.add(pathway_search_btn);
 
 	pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
-							gen_search_btn.getPreferredSize().height));
+							pathway_search_btn.getPreferredSize().height));
 	pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
-						    gen_search_btn.getPreferredSize().height));
+						    pathway_search_btn.getPreferredSize().height));
 	//=============================================================================================
 	//Pathway browser left panel
 	pathway_left_panel = new JPanel();
@@ -207,7 +203,7 @@ public class GUI extends JFrame {
 	reaction_information.setPreferredSize(new Dimension(reaction_information.getMaximumSize().width,
 							    REACTION_INFO_HEIGHT));
 	pathway_right_panel.add(reaction_information);
-	pathway_right_panel.add(new JLabel("Involvs gene(s)"));
+	pathway_right_panel.add(new JLabel("Involves gene(s)"));
 
 	involves_gens = new JScrollPane();
 	pathway_right_panel.add(involves_gens);
@@ -277,5 +273,35 @@ public class GUI extends JFrame {
 	    browser.gen_search();
 	}
     }
+
+    private class Pathway_species_field extends JTextField {
+	public Pathway_species_field() {
+	    super(PATHWAY_SPECIES_FIELD_LENGTH);
+	    setColumns(PATHWAY_SPECIES_FIELD_LENGTH);
+	    setMaximumSize(getPreferredSize());
+	}
+    }
+
+    private class Pathway_mapID_field extends JTextField {
+	public Pathway_mapID_field() {
+	    super(PATHWAY_MAPID_FIELD_LENGTH);
+	    setColumns(PATHWAY_MAPID_FIELD_LENGTH);
+	    setMaximumSize(getPreferredSize());
+	}
+    }
+
+    private class Pathway_search_button extends JButton implements ActionListener {
+	public Pathway_search_button() {
+	    super("Search");
+	    addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	    browser.set_pathway_species(pathway_species_field.getText());
+	    browser.set_pathway_mapID(pathway_mapID_field.getText());
+	    browser.pathway_search();
+	}
+    }
+
 }
 
