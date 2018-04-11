@@ -58,13 +58,11 @@ public class Browser {
 	return pathway_mapID;
     }
 
-    public void gen_search() {
+    public String gen_search() {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
 	}
-	String ret = KEGG.get_genome_data(gen_species, gen_genID);
-	System.out.println(ret);
-	// TODO put ret in the GUI
+	return KEGG.get_genome_data(gen_species, gen_genID);
     }
 
     public void pathway_search() {

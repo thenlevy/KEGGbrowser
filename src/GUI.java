@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
+import javax.swing.JTextPane;
 import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -43,7 +44,7 @@ public class GUI extends JFrame {
 
     private JPanel gen_right_panel; // right part of the genome browser
     private JPanel gen_right_menu;
-    private JScrollPane gene_information;
+    private Gene_info_display gene_information;
     private JScrollPane involved_in_reactions;
 
     // Pathway browser component
@@ -117,11 +118,8 @@ public class GUI extends JFrame {
 	gen_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
 	gen_right_panel.add(new JLabel("Gene Information"));
 
-	gene_information = new JScrollPane();
+	gene_information = new Gene_info_display();
 	gen_right_panel.add(gene_information);
-	gene_information.setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
-	gene_information.setMaximumSize(new Dimension(gene_information.getMaximumSize().width,
-						    GENE_INFO_HEIGHT));
 
 	gen_right_panel.add(new JLabel("Involved in reaction(s)"));
 
@@ -270,7 +268,8 @@ public class GUI extends JFrame {
 	public void actionPerformed(ActionEvent e) {
 	    browser.set_gen_species(gen_species_field.getText());
 	    browser.set_gen_genID(gen_genID_field.getText());
-	    browser.gen_search();
+	    gene_information.set_text(browser.gen_search());
+	    refresh_gui();
 	}
     }
 
@@ -300,6 +299,24 @@ public class GUI extends JFrame {
 	    browser.set_pathway_species(pathway_species_field.getText());
 	    browser.set_pathway_mapID(pathway_mapID_field.getText());
 	    browser.pathway_search();
+	    
+	}
+    }
+
+    private class Gene_info_display extends JScrollPane {
+	private JTextPane txt;
+	public Gene_info_display() {
+	    super();
+	    setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
+	    setMaximumSize(new Dimension(getMaximumSize().width,
+					 GENE_INFO_HEIGHT));
+	    txt = new JTextPane();
+	    setViewportView(txt);
+	}
+
+	protected void set_text(String info) {
+	    txt.setText(info);
+	    repaint();
 	}
     }
 
