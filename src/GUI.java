@@ -13,6 +13,10 @@ import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import org.fit.cssbox.swingbox.BrowserPane;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.IOException;
 
 /**
  * Graphical interface for KEGGbrowser
@@ -40,7 +44,7 @@ public class GUI extends JFrame {
     private JTextField gen_genID_field;
     private final static int GEN_GENID_FIELD_LENGTH = 6;
     private JButton gen_search_btn;
-    private JScrollPane genome_display;
+    private Genome_display genome_display;
 
     private JPanel gen_right_panel; // right part of the genome browser
     private JPanel gen_right_menu;
@@ -103,7 +107,7 @@ public class GUI extends JFrame {
 	gen_left_panel.setLayout(new BoxLayout(gen_left_panel, BoxLayout.PAGE_AXIS));
 	gen_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
 	gen_left_panel.add(gen_left_menu);
-	genome_display = new JScrollPane();
+	genome_display = new Genome_display();
 	gen_left_panel.add(genome_display);
 
 	gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
@@ -300,6 +304,25 @@ public class GUI extends JFrame {
 	    browser.set_pathway_mapID(pathway_mapID_field.getText());
 	    browser.pathway_search();
 	    
+	}
+    }
+
+    private class Genome_display extends JScrollPane {
+	public Genome_display() {
+	    super();
+	    BrowserPane content = new BrowserPane();
+	    
+	    setViewportView(content);
+	    
+	    try {
+		content.setPage(new URL("http://www.genome.jp/kegg-bin/show_genomemap?ORG=eco&ACCESSION=b0630"));
+	    } catch(MalformedURLException e){
+			System.out.println(e);
+	    } catch(IOException e){
+			System.out.println(e);
+	    }
+	   
+
 	}
     }
 
