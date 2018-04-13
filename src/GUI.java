@@ -272,7 +272,7 @@ public class GUI extends JFrame {
 	public void actionPerformed(ActionEvent e) {
 	    browser.set_gen_species(gen_species_field.getText());
 	    browser.set_gen_genID(gen_genID_field.getText());
-	    gene_information.set_text(browser.gen_search());
+	    browser.gen_search();
 	    refresh_gui();
 	}
     }
@@ -308,21 +308,21 @@ public class GUI extends JFrame {
     }
 
     private class Genome_display extends JScrollPane {
+	private BrowserPane content;
 	public Genome_display() {
 	    super();
-	    BrowserPane content = new BrowserPane();
-	    
+	    content = new BrowserPane();
 	    setViewportView(content);
-	    
-	    try {
-		content.setPage(new URL("http://www.genome.jp/kegg-bin/show_genomemap?ORG=eco&ACCESSION=b0630"));
-	    } catch(MalformedURLException e){
-			System.out.println(e);
-	    } catch(IOException e){
-			System.out.println(e);
-	    }
-	   
+	}
 
+	public void update_page(String new_url) {
+	    try {
+		content.setPage(new URL(new_url));
+	    } catch(MalformedURLException e) {
+		content.setText(e.toString());
+	    } catch(IOException e) {
+		content.setText(e.toString());
+	    }
 	}
     }
 
@@ -342,6 +342,15 @@ public class GUI extends JFrame {
 	    repaint();
 	}
     }
+
+    public void set_gene_info_text(String new_text) {
+	    gene_information.set_text(new_text);
+    }
+
+    public void set_browser_url(String new_url) {
+	genome_display.update_page(new_url);
+    }
+	
 
 }
 

@@ -58,11 +58,15 @@ public class Browser {
 	return pathway_mapID;
     }
 
-    public String gen_search() {
+    public void gen_search() {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
 	}
-	return KEGG.get_genome_data(gen_species, gen_genID);
+	gui.set_gene_info_text(KEGG.get_genome_data(gen_species, gen_genID));
+	String new_browser_url = ("http://www.genome.jp/kegg-bin/show_genomemap?ORG="
+				  + gen_species +"&ACCESSION=" + gen_genID);
+
+	gui.set_browser_url(new_browser_url);
     }
 
     public void pathway_search() {
