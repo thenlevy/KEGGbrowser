@@ -14,7 +14,7 @@ public class Conf_reader {
     private List<Conf_rectangle> rectangles;
 
     public Conf_reader(File conf_file) {
-	rectangles = new ArrayList();
+	rectangles = new ArrayList<Conf_rectangle>();
 	try {
 	    BufferedReader reader = new BufferedReader(new FileReader(conf_file));
 	    String line = "";
@@ -43,6 +43,9 @@ class Conf_rectangle {
     private int top;
     private int right;
     private int bot;
+    private List<String> k_nums;
+    private List<String> genes;
+    private List<String> r_nums;
 
     private Conf_rectangle(int l, int t, int r, int b) {
 	left = l;
@@ -77,15 +80,49 @@ class Conf_rectangle {
 	y_getter.find();
 	int bot = Integer.parseInt(s.substring(y_getter.start() + 1, y_getter.end() - 1));
 
-	return (new Conf_rectangle(left, top, right, bot));
+	Conf_rectangle ret = (new Conf_rectangle(left, top, right, bot));
+
+	ret.k_nums = new ArrayList<String>();
+	Pattern knum = Pattern.compile("K[0-9]{5}");
+	Matcher knum_getter = knum.matcher(s);
+	while (knum_getter.find()) {
+	    ret.k_nums.add(knum_getter.group());
+	}
+
+	ret.genes = new ArrayList<String>();
+	Pattern gene = Pattern.compile("[a-zA-Z]+\\:[a-zA-Z0-9]+");
+	Matcher gene_getter = gene.matcher(s);
+	while (gene_getter.find()) {
+	    ret.genes.add(gene_getter.group());
+	}
+
+	ret.r_nums = new ArrayList<String>();
+	Pattern rnum = Pattern.compile("R[0-9]{5}");
+	Matcher rnum_getter = rnum.matcher(s);
+	while (rnum_getter.find()) {
+	    ret.r_nums.add(rnum_getter.group());
+	}
+
+	return ret;
+	    
     }
 
 
     public String to_str() {
-	return ("(" + left + "," + top + ")(" + right + "," + bot + ")");
+	String ret = "";
+	ret += ("(" + left + "," + top + ")(" + right + "," + bot + ")\n");
+	for (String knum : k_nums)
+	    ret += (knum + " ");
+	ret += "\n";
+	for (String gene : genes)
+	    ret += (gene + " ");
+	ret += "\n";
+	for (String rnum : r_nums)
+	    ret += (rnum + " ");
+	ret += "\n";
+	return ret;
     }
 }
-	
-
+	 
 
 
