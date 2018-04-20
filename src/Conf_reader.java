@@ -13,49 +13,79 @@ import java.util.regex.Matcher;
  */
 public class Conf_reader {
 
+    private File org_file;
+    private File map_file;
+    private Hashtable<Integer, Map_rectangle> hash_map;
+    private Hashtable<Integer, Org_rectangle> hash_org;
+
     public static void main(String arg[]) {
 	File org_file = new File("test_org.conf");
 	File map_file = new File("test_map.conf");
-	List<String> test = get_reaction("b0688", org_file, map_file);
+	Conf_reader test_obj = new Conf_reader(org_file, map_file);
+	List<String> test = test_obj.get_reaction("b0630");
 	for (String s : test) {
 	    System.out.println(s);
 	}
     }
 
-    public static List<String> get_reaction(String gene_interest, File org_file, File map_file) {
-	List<String> ret = new ArrayList<String>();
-	Hashtable<Integer, Map_rectangle> hash_rectangles = new Hashtable<Integer, Map_rectangle>();
+    public Conf_reader(File org_f, File map_f) {
+	org_file = org_f;
+	map_file = map_f;
 
+	make_hash_map();
+	make_org_map();
+    }
+
+    /** Read the map conf file and create the Map_rectangle and store them in the Hashtable hash_map
+     */
+    private void make_hash_map() {
+	hash_map = new Hashtable<Integer, Map_rectangle>();
 	try {
-	    // Read the map conf file and extrcts all the rectangle informations
 	    BufferedReader map_reader = new BufferedReader(new FileReader(map_file));
 	    String line = "";
 	    while ((line = map_reader.readLine()) != null) {
 		if (line.startsWith("rect")) {
 		    Map_rectangle rect = Map_rectangle.from_line(line);
-		    hash_rectangles.put(rect.get_hash(), rect);
+		    hash_map.put(rect.get_hash(), rect);
 		}
 	    }
-
-	    // Read the org conf file and look for the rectangles that involves the gene
-	    // of interest
-	    BufferedReader org_reader = new BufferedReader(new FileReader(org_file));
-	    while ((line = org_reader.readLine()) != null) {
-		if (line.contains(gene_interest)) {
-		    Org_rectangle rect = Org_rectangle.from_line(line);
-		    Map_rectangle map_rect = hash_rectangles.get(rect.get_hash());
-		    for (String reaction : map_rect.get_reactions())
-			ret.add(reaction);
-		}
-	    }
-
 	} catch (Exception e) {
 	    System.out.println(e);
 	}
-	return ret;
     }
 
-		
+    /** Read the org conf file and create the Org_rectangle and store them in the Hashtable hash_org
+     */
+    private void make_org_map() {
+	hash_org = new Hashtable<Integer, Org_rectangle>();
+	try {
+	    BufferedReader org_reader = new BufferedReader(new FileReader(org_file));
+	    String line = "";
+	    while ((line = org_reader.readLine()) != null) {
+		if (line.startsWith("rect")) {
+		    Org_rectangle rect = Org_rectangle.from_line(line);
+		    hash_org.put(rect.get_hash(), rect);
+		}
+	    }
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+    }
+	
+
+    public List<String> get_reaction(String gene_interest) {
+	List<String> ret = new ArrayList<String>();
+	
+	for (Org_rectangle rect : hash_org.values()) {
+	    if (rect.has_gene(gene_interest)) {
+		Map_rectangle map_rect = hash_map.get(rect.get_hash());
+		for (String reaction : map_rect.get_reactions()) {
+		    ret.add(reaction);
+		}
+	    }
+	}
+	return ret;
+    }
 }
 
 
@@ -64,7 +94,6 @@ class Conf_rectangle {
     private int top;
     private int right;
     private int bot;
-    private List<String> genes;
 
     private Conf_rectangle(int l, int t, int r, int b) {
 	left = l;
@@ -146,6 +175,10 @@ class Map_rectangle extends Conf_rectangle {
 	return ret;
     }
 
+    public boolean has_reacton(String react) {
+	return r_nums.contains(react);
+    }
+
     @Override
     public String to_str() {
 	String ret = super.to_str();
@@ -171,23 +204,29 @@ class Map_rectangle extends Conf_rectangle {
 }
 
 class Org_rectangle extends Conf_rectangle {
-    private List<String> genes;
+    private HashSet<String> genes;
 
     private Org_rectangle(Conf_rectangle cr) {
 	super(cr);
-	genes = new ArrayList<String>();
+	genes = new HashSet<String>();
     }
 
     public static Org_rectangle from_line(String s) {
 	Org_rectangle ret = new Org_rectangle(Conf_rectangle.read_coordonates(s));
 
-	Pattern gene = Pattern.compile("[a-zA-Z]+\\:[a-zA-Z0-9]+");
+	// Search for genes in the line
+	// gene have are in the form org:geneID
+	Pattern gene = Pattern.compile("([a-zA-Z]+\\:)([a-zA-Z0-9]+)");
 	Matcher gene_getter = gene.matcher(s);
 	while (gene_getter.find()) {
-	    ret.genes.add(gene_getter.group());
+	    ret.genes.add(gene_getter.group(2)); // store only the geneID 
 	}
 
 	return ret;
+    }
+
+    public boolean has_gene(String gene) {
+	return genes.contains(gene);
     }
 
     @Override
