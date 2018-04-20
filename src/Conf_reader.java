@@ -71,7 +71,15 @@ public class Conf_reader {
 	    System.out.println(e);
 	}
     }
-	
+
+    public Conf_rectangle find_rect(int x, int y) {
+	for (Conf_rectangle cr: hash_map.values()) {
+	    if (cr.is_in(x, y)) {
+		return new Conf_rectangle(cr);
+	    }
+	}
+	return new Conf_rectangle();
+    }
 
     public List<String> get_reaction(String gene_interest) {
 	List<String> ret = new ArrayList<String>();
@@ -89,64 +97,6 @@ public class Conf_reader {
 }
 
 
-class Conf_rectangle {
-    private int left;
-    private int top;
-    private int right;
-    private int bot;
-
-    private Conf_rectangle(int l, int t, int r, int b) {
-	left = l;
-	top = t;
-	right = r;
-	bot = b;
-    }
-
-    protected Conf_rectangle(Conf_rectangle cr) {
-	left = cr.left;
-	top = cr.top;
-	right = cr.right;
-	bot = cr.bot;
-    }
-
-    public boolean is_in(int x, int y) {
-	return (x >= left && x <= right && y >= top && y <= bot);
-    }
-
-    /** Reads the line a conf file describing a recantgle and returns the rectangle
-     * @param s the line describing the rectangle
-     * @return the rectangle discribed by that line
-     **/
-    static Conf_rectangle read_coordonates(String s) {
-	Pattern first_coordonate = Pattern.compile("\\(\\b*[0-9]+\\b*,");
-	Pattern second_coordonate = Pattern.compile(",\\b*[0-9]+\b*\\)");
-	Matcher x_getter = first_coordonate.matcher(s);
-	Matcher y_getter = second_coordonate.matcher(s);
-
-	x_getter.find();
-	// x_getter.group() is "(xxxx," so we want to take out first and last character
-	int left = Integer.parseInt(s.substring(x_getter.start() + 1, x_getter.end() - 1));
-	x_getter.find();
-	int right = Integer.parseInt(s.substring(x_getter.start() + 1, x_getter.end() - 1));
-
-	y_getter.find();
-	// y_getter.group is ",xxxx)" so we want to take out first and last character
-	int top = Integer.parseInt(s.substring(y_getter.start() + 1, y_getter.end() - 1));
-	y_getter.find();
-	int bot = Integer.parseInt(s.substring(y_getter.start() + 1, y_getter.end() - 1));
-
-	return new Conf_rectangle(left, top, right, bot);
-    }
-
-    public int get_hash() {
-	// Unique, assuming that (left + right) / 2 < 100000
-	return  100000 * (top + bot) / 2 + (left + right) / 2;
-    }
-
-    public String to_str() {
-	return ("(" + left + "," + top + ")(" + right + "," + bot + ")");
-    }
-}
 
 class Map_rectangle extends Conf_rectangle {
     private HashSet<String> k_nums;
