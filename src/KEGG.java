@@ -1,25 +1,39 @@
 import java.io.*;
+import java.io.File;
 import java.net.*;
+import java.io.InputStream;
+import java.io.OutputStream;
  
 public class KEGG{
-	public static String get_genome_data(String specie, String gene_id) {
+	public static void get_genome_data(String specie, String gene_id) {
 		String url_name = ("http://rest.kegg.jp/get/"+ specie+ ":" 
 							+ gene_id);
-		return get_text_url(url_name);
+        get_text_url(url_name,specie,gene_id);
 
 	}
-	private static String get_text_url(String url_name){
-		String ret= "";				  
+	private static void get_text_url(String url_name,String specie, String gene_id){
+
 		try{
 			URL url = new URL(url_name);
 
 			URLConnection path =url.openConnection();
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
+          
+            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+                            + specie + "/" + "GI" + "/"+ gene_id);
+            dir.mkdirs();
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(
+                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/" 
+                + "GI" +"/" + gene_id + "/" + specie + gene_id));
 
+            int i=0;
+            while((i=input.read())!=-1){
+                fileOutputStream.write((char)i);
+            }
+            fileOutputStream.close();
+            input.close();
 
-			while(input.available()>0)
-			ret += (char)input.read();
 		}
 		catch(MalformedURLException e){
 			System.out.println(e);
@@ -27,12 +41,10 @@ public class KEGG{
 		catch(IOException e){
 			System.out.println(e);
 		}
-		return ret;
 		
 	}
 	public static void main(String[] argv) {
-	
-		String test = get_genome_data("eco" , "b0630");
-		System.out.println(test);
+        get_genome_data("eco" , "b0002");
+		
 	}
 }
