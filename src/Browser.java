@@ -1,4 +1,5 @@
 import javax.swing.SwingUtilities; 
+import java.io.File;
 
 /**
  * Holds the results and querry of KEGGbrowser
@@ -10,6 +11,7 @@ public class Browser {
     private String pathway_species; // "Sepecies" field of the pathway browser
     private String pathway_mapID;
     private GUI gui;
+    private Conf_reader conf_reader;
     private boolean debug_mode = false;
 
     public Browser() {
@@ -58,11 +60,15 @@ public class Browser {
 	return pathway_mapID;
     }
 
-    public String gen_search() {
+    public void gen_search() {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
 	}
-	return KEGG.get_genome_data(gen_species, gen_genID);
+	gui.set_gene_info_text(KEGG.get_genome_data(gen_species, gen_genID));
+	String new_browser_url = ("http://www.genome.jp/kegg-bin/show_genomemap?ORG="
+				  + gen_species +"&ACCESSION=" + gen_genID);
+
+	gui.set_browser_url(new_browser_url);
     }
 
     public void pathway_search() {
@@ -79,11 +85,30 @@ public class Browser {
 	}
     }
 
+    public void set_conf(File org_file, File map_file) {
+	conf_reader = new Conf_reader(org_file, map_file);
+    }
+
+    public void click_on_rectangle(int x, int y) {
+	Conf_rectangle rect = conf_reader.find_rect(x, y);
+	if (rect.is_true_rectangle()) {
+	    System.out.println("Clicked on rectangle" + rect.to_str());
+	}
+	else {
+	    System.out.println("Clicked somewhere else");
+	}
+    }
+	
+
     public static void main(String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
 		@Override
 		public void run() {
 		    Browser b = new Browser(true);
+		    b.set_conf(new File("test_org.conf"), new File("test_map.conf"));
+		    b.click_on_rectangle(5, 5);
+		    b.click_on_rectangle(200, 300);
+		    
 		}
 	    });
     }

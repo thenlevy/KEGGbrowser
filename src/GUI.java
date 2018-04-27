@@ -13,6 +13,10 @@ import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import org.fit.cssbox.swingbox.BrowserPane;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.IOException;
 
 /**
  * Graphical interface for KEGGbrowser
@@ -40,7 +44,7 @@ public class GUI extends JFrame {
     private JTextField gen_genID_field;
     private final static int GEN_GENID_FIELD_LENGTH = 6;
     private JButton gen_search_btn;
-    private JScrollPane genome_display;
+    private Genome_display genome_display;
 
     private JPanel gen_right_panel; // right part of the genome browser
     private JPanel gen_right_menu;
@@ -103,7 +107,7 @@ public class GUI extends JFrame {
 	gen_left_panel.setLayout(new BoxLayout(gen_left_panel, BoxLayout.PAGE_AXIS));
 	gen_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
 	gen_left_panel.add(gen_left_menu);
-	genome_display = new JScrollPane();
+	genome_display = new Genome_display();
 	gen_left_panel.add(genome_display);
 
 	gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
@@ -268,7 +272,7 @@ public class GUI extends JFrame {
 	public void actionPerformed(ActionEvent e) {
 	    browser.set_gen_species(gen_species_field.getText());
 	    browser.set_gen_genID(gen_genID_field.getText());
-	    gene_information.set_text(browser.gen_search());
+	    browser.gen_search();
 	    refresh_gui();
 	}
     }
@@ -303,6 +307,25 @@ public class GUI extends JFrame {
 	}
     }
 
+    private class Genome_display extends JScrollPane {
+	private BrowserPane content;
+	public Genome_display() {
+	    super();
+	    content = new BrowserPane();
+	    setViewportView(content);
+	}
+
+	public void update_page(String new_url) {
+	    try {
+		content.setPage(new URL(new_url));
+	    } catch(MalformedURLException e) {
+		content.setText(e.toString());
+	    } catch(IOException e) {
+		content.setText(e.toString());
+	    }
+	}
+    }
+
     private class Gene_info_display extends JScrollPane {
 	private JTextPane txt;
 	public Gene_info_display() {
@@ -319,6 +342,15 @@ public class GUI extends JFrame {
 	    repaint();
 	}
     }
+
+    public void set_gene_info_text(String new_text) {
+	    gene_information.set_text(new_text);
+    }
+
+    public void set_browser_url(String new_url) {
+	genome_display.update_page(new_url);
+    }
+	
 
 }
 
