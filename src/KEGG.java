@@ -6,6 +6,7 @@ import java.io.OutputStream;
  
 public class KEGG{
 	public static void get_genome_data(String specie, String gene_id) {
+        
 		String url_name = ("http://rest.kegg.jp/get/"+ specie+ ":" 
 							+ gene_id);
         get_text_url(url_name,specie,gene_id);

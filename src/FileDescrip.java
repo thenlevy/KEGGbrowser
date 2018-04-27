@@ -17,7 +17,7 @@ public class FileDescrip {
     public static void open_file_local(String specie, String info, String categorie ){
         if(Desktop.getDesktop().isSupported(java.awt.Desktop.Action.OPEN)){
             try {
-                java.awt.Desktop.getDesktop().open(new File("/Users/hassenebenyedder/KEGGbrowser/"+specie+"/"+categorie+"/"+info+"/"+ specie+ info));
+                java.awt.Desktop.getDesktop().open(new File("/Users/hassenebenyedder/KEGGbrowser/"+specie+"/"+categorie+"/"+ specie+ info));
             } 
             catch (IOException e) {
                 e.printStackTrace();
@@ -45,11 +45,11 @@ public class FileDescrip {
 			InputStream input = path.getInputStream();
           
             File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
-                            + specie + "/" + "GI" + "/"+ gene_id);
+                            + specie + "/GI/");
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/" 
-                + "GI" +"/" + gene_id + "/" + specie + gene_id));
+                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/GI/" 
+                 + specie + gene_id));
 
             int i=0;
             while((i=input.read())!=-1){
@@ -71,6 +71,47 @@ public class FileDescrip {
 //        get_genome_data("eco" , "b0002");
 //		
 //	}
+
+     public static void get_reaction_data(String specie, String reaction_id) {
+        
+		String url_name = ("http://rest.kegg.jp/get/rn:" + reaction_id);
+        get_reaction_url(url_name,specie,reaction_id);
+
+	}
+	private static void get_reaction_url(String url_name,String specie, String reaction_id){
+
+		try{
+			URL url = new URL(url_name);
+
+			URLConnection path =url.openConnection();
+			System.out.println(path.getContent());
+			InputStream input = path.getInputStream();
+          
+            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"+ specie +
+                                "/" + "reaction");
+            dir.mkdirs();
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(
+                "/Users/hassenebenyedder/KEGGbrowser/"+ specie + 
+                "/reaction/"+ specie + reaction_id));
+
+            int i=0;
+            while((i=input.read())!=-1){
+                fileOutputStream.write((char)i);
+            }
+            fileOutputStream.close();
+            input.close();
+
+		}
+		catch(MalformedURLException e){
+			System.out.println(e);
+		}
+		catch(IOException e){
+			System.out.println(e);
+		}
+		
+	}
+
+    
      public static void get_path_data(String specie, String pathway) {
 		String url_name = ("http://rest.kegg.jp/get/" + specie + pathway
                             + "/image");
@@ -87,12 +128,11 @@ public class FileDescrip {
             InputStream in = new BufferedInputStream(url.openStream());
             
             File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
-                            + specie + "/" + "pathway" + "/"+ pathway);
+                            + specie + "/pathway/");
             dir.mkdirs();
             OutputStream out = new BufferedOutputStream(
             new FileOutputStream("/Users/hassenebenyedder/KEGGbrowser/"
-                            + specie + "/" + "pathway" + "/"+ pathway +
-                            "/"+specie + pathway));
+                            + specie + "/pathway/" +specie + pathway));
 
             for ( int i; (i = in.read()) != -1; ) {
                 out.write(i);
@@ -111,8 +151,8 @@ public class FileDescrip {
     }
     public static void file_finder(String specie, String info){
         if (info.startsWith("b")){
-            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+specie + "/" 
-                + "GI" +"/" + info + "/" + specie + info );
+            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+specie + 
+            "/GI/" + info + "/" + specie + info );
             if(f.exists() && !f.isDirectory()){
                 open_file_local(specie, info , "GI");
             }
@@ -121,6 +161,20 @@ public class FileDescrip {
                 open_file_local(specie, info , "GI");
             }
         }
+        else if (info.startsWith("R")){
+            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+ specie +
+                                "reaction/"+specie + info);
+            if(f.exists() && !f.isDirectory()){
+                open_file_local(specie, info , "reaction");
+            }
+            else {
+                get_reaction_data(specie, info);
+                open_file_local(specie, info , "reaction");
+            }
+            
+                
+        }
+            
         else{
             File f = new File("/Users/hassenebenyedder/KEGGbrowser/"
                             + specie + "/" + "pathway" + "/"+ info );
@@ -141,7 +195,7 @@ public class FileDescrip {
 
         
     public static void main(String[] argv) {
-        file_finder("eco","00260");
+        file_finder("eco","b0630");
         }
 
 }
