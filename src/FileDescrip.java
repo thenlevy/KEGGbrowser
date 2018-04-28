@@ -67,10 +67,45 @@ public class FileDescrip {
 		}
 		
 	}
-//	public static void main(String[] argv) {
-//        get_genome_data("eco" , "b0002");
-//		
-//	}
+    
+    public static void org_conf_file(String specie, String gene_id) {
+		String url_name = ("http://rest.kegg.jp/get/" + specie
+                            + gene_id + "/conf");
+        save_conf_file(url_name,specie,gene_id);
+
+	}
+	private static void save_conf_file(String url_name,String specie, String gene_id){
+
+		try{
+			URL url = new URL(url_name);
+
+			URLConnection path = url.openConnection();
+			System.out.println(path.getContent());
+			InputStream input = path.getInputStream();
+          
+            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+                            + specie + "/conf/");
+            dir.mkdirs();
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(
+                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/conf/" 
+                 + specie + gene_id ));
+
+            int i=0;
+            while((i=input.read())!=-1){
+                fileOutputStream.write((char)i);
+            }
+            fileOutputStream.close();
+            input.close();
+
+		}
+		catch(MalformedURLException e){
+			System.out.println(e);
+		}
+		catch(IOException e){
+			System.out.println(e);
+		}
+		
+	}
 
      public static void get_reaction_data(String specie, String reaction_id) {
         
@@ -121,6 +156,7 @@ public class FileDescrip {
     
     
     
+    
     private static void get_path_image(String url_name,String specie,String pathway){
         try {
             
@@ -149,16 +185,58 @@ public class FileDescrip {
         
 
     }
+    public static void map_conf_file(String specie, String mapID) {
+		String url_name = ("http://rest.kegg.jp/get/map"
+                            + mapID + "/conf");
+        save_map_conf(url_name,specie,mapID);
+
+	}
+	private static void save_map_conf(String url_name,String specie, String mapID){
+
+		try{
+			URL url = new URL(url_name);
+
+			URLConnection path = url.openConnection();
+			System.out.println(path.getContent());
+			InputStream input = path.getInputStream();
+          
+            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+                            + specie + "/map_conf/");
+            dir.mkdirs();
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(
+                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/map_conf/" 
+                 + specie + mapID ));
+
+            int i=0;
+            while((i=input.read())!=-1){
+                fileOutputStream.write((char)i);
+            }
+            fileOutputStream.close();
+            input.close();
+
+		}
+		catch(MalformedURLException e){
+			System.out.println(e);
+		}
+		catch(IOException e){
+			System.out.println(e);
+		}
+		
+	}
     public static void file_finder(String specie, String info){
         if (info.startsWith("b")){
             File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+specie + 
             "/GI/" + info + "/" + specie + info );
+            
             if(f.exists() && !f.isDirectory()){
                 open_file_local(specie, info , "GI");
             }
             else {
+                
                 get_genome_data(specie, info);
+                
                 open_file_local(specie, info , "GI");
+                
             }
         }
         else if (info.startsWith("R")){
@@ -176,15 +254,28 @@ public class FileDescrip {
         }
             
         else{
-            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"
-                            + specie + "/" + "pathway" + "/"+ info );
             
-            if(f.exists() && !f.isDirectory()){
+            File f1 = new File("/Users/hassenebenyedder/KEGGbrowser/"
+                            + specie + "/" + "pathway" + "/"+ info );
+            File f2 = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+                                + specie + "/conf/" + specie + info );
+            File f3 = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+                                +specie + "/map_conf/" + specie + info);
+            if( (f1.exists() && !f1.isDirectory()) && 
+                (f2.exists() && !f2.isDirectory()) && 
+                (f3.exists() && !f3.isDirectory())){
+                
                 open_file_local(specie, info , "pathway");
+                open_file_local(specie, info , "conf");
+                open_file_local(specie , info , "map_conf");
             }
             else {
                 get_path_data(specie, info);
+                org_conf_file(specie,info);
+                map_conf_file(specie,info);
                 open_file_local(specie, info , "pathway");
+                open_file_local(specie, info , "conf");
+                open_file_local(specie , info , "map_conf");
             }
         }
     }
@@ -195,7 +286,7 @@ public class FileDescrip {
 
         
     public static void main(String[] argv) {
-        file_finder("eco","b0630");
+        file_finder("eco","00020");
         }
 
 }
