@@ -1,6 +1,6 @@
 import javax.swing.SwingUtilities; 
 import java.io.File;
-
+import java.util.List;
 /**
  * Holds the results and querry of KEGGbrowser
  */
@@ -14,6 +14,7 @@ public class Browser {
     private GUI gui;
     private Conf_reader conf_reader;
     private boolean debug_mode = false;
+    private List<String> reaction_list;
 
     public Browser() {
 	gen_species = "...";
@@ -73,11 +74,11 @@ public class Browser {
 				  + gen_species +"&ACCESSION=" + gen_genID);
 
 	gui.set_browser_url(new_browser_url);
-	gui.set_gene_reaction_menu(Conf_reader.get_all_reactions(gen_species, gen_genID));
+	reaction_list = Conf_reader.get_all_reactions(gen_species, gen_genID);
+	gui.set_gene_reaction_menu(reaction_list);
     }
 
     public void pathway_search() {
-	// TODO implement this search function
 	if (debug_mode) {
 	    System.out.println("Pathway Browser Search " + pathway_species + " " + pathway_mapID);
 	}
@@ -109,10 +110,15 @@ public class Browser {
 	if (debug_mode) {
 	    System.out.println("Selected index " + index);
 	}
+	String pathway = reaction_list.get(index).split(" ")[2];
+	int specie_name_length = pathway.length() - 5;
+	pathway_species = pathway.substring(0, specie_name_length - 1);
+	pathway_mapID = pathway.substring(specie_name_length);
+	update_pathway(pathway);
     }
 
     public void update_pathway(String pathway) {
-	if (displayed_pathway != pathway) {
+	if (!displayed_pathway.equals(pathway)) {
 	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
 	    displayed_pathway = pathway;
 	}

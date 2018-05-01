@@ -119,7 +119,7 @@ public class GUI extends JFrame {
 	gen_left_panel.add(genome_display);
 
 	gen_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
-	gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
+	//gen_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, GEN_HEIGHT));
 	//=============================================================================================
 
 
@@ -139,7 +139,7 @@ public class GUI extends JFrame {
 	gen_right_panel.add(involved_in_reactions);
 
 	gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
-	gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
+	//gen_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
 	//=============================================================================================
 	//Genome browser global
 
@@ -175,7 +175,7 @@ public class GUI extends JFrame {
 	pathway_left_menu.setPreferredSize(new Dimension(LEFT_WIDTH,
 							pathway_search_btn.getPreferredSize().height));
 	pathway_left_menu.setMaximumSize(new Dimension(LEFT_WIDTH,
-						    pathway_search_btn.getPreferredSize().height));
+						       pathway_search_btn.getPreferredSize().height));
 	//=============================================================================================
 	//Pathway browser left panel
 	pathway_left_panel = new JPanel();
@@ -186,7 +186,7 @@ public class GUI extends JFrame {
 	pathway_left_panel.add(pathway_display);
 
 	pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
-	pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+	//pathway_left_panel.setMaximumSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
 	//=============================================================================================
 	//Pathway browser right menu
 	pathway_right_menu = new JPanel();
@@ -218,7 +218,7 @@ public class GUI extends JFrame {
 	involves_gens = new JScrollPane();
 	pathway_right_panel.add(involves_gens);
 	pathway_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
-	pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
+	//pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
 	//=============================================================================================
 	// Pathway browser global
 
@@ -339,8 +339,8 @@ public class GUI extends JFrame {
 	public Gene_info_display() {
 	    super();
 	    setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
-	    setMaximumSize(new Dimension(getMaximumSize().width,
-					 GENE_INFO_HEIGHT));
+	    //setMaximumSize(new Dimension(getMaximumSize().width,
+	    //GENE_INFO_HEIGHT));
 	    txt = new JTextPane();
 	    setViewportView(txt);
 	}
