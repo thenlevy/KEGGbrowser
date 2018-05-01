@@ -25,18 +25,49 @@ public class Conf_reader {
 	}
     }
 
+    private static List<String> get_pathway_files(String specie, String gene_id) {
+	File f = FileDescrip.get_gene_info(specie, gene_id);
+	List<String> ret = new ArrayList<String>();
+	try {
+	    BufferedReader bf = new BufferedReader(new FileReader(f));
+	    String line = "";
+	    boolean reading_pathways = false;
+	    while ((line = bf.readLine()) != null) {
+
+		if (line.startsWith("PATHWAY"))
+			reading_pathways = true;
+
+		if (reading_pathways) {
+			Pattern pathway = Pattern.compile("\\s([a-zA-Z]{3,4})([0-9]{5})");
+			Matcher pathway_getter = pathway.matcher(line);
+			if (pathway_getter.find()) {
+			    String path = pathway_getter.group(2);
+			    ret.add(path);
+			}
+			else break;
+		}
+	    }
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return ret;
+    }
+
     public static List<String> get_reaction(File org_file, File map_file, String gene_id) {
 	Conf_reader cr = new Conf_reader(org_file, map_file);
 	return cr.get_reaction(gene_id);
     }
 
     public static List<String> get_all_reactions(String specie, String gene_id) {
-	List<File[]> pathways = FileDescrip.get_pathway_files(specie, gene_id);
+	List<String> pathways = get_pathway_files(specie, gene_id);
 	List<String> ret = new ArrayList<String>();
-	for (File p[] : pathways) {
-	    File org_file = p[0];
-	    File map_file = p[1];
-	    ret.addAll(get_reaction(org_file, map_file, gene_id));
+	for (String path : pathways) {
+	    File org_file = FileDescrip.get_org_conf(specie, path);
+	    File map_file = FileDescrip.get_map_conf(path);
+	    List<String> reactions = get_reaction(org_file, map_file, gene_id);
+	    for (String reaction : reactions) {
+		ret.add(reaction + " @ " + specie + path);
+	    }
 	}
 	return ret;
     }

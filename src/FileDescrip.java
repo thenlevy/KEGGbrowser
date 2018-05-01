@@ -15,8 +15,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -138,36 +136,6 @@ public class FileDescrip {
 
 	}
 
-    public static List<File[]> get_pathway_files(String specie, String gene_id) {
-	File f = get_gene_info(specie, gene_id);
-	List<File[]> ret = new ArrayList<File[]>();
-	try {
-	    BufferedReader bf = new BufferedReader(new FileReader(f));
-	    String line = "";
-	    boolean reading_pathways = false;
-	    while ((line = bf.readLine()) != null) {
-
-		if (line.startsWith("PATHWAY"))
-			reading_pathways = true;
-
-		if (reading_pathways) {
-			Pattern pathway = Pattern.compile("\\s([a-zA-Z]{3,4})([0-9]{5})");
-			Matcher pathway_getter = pathway.matcher(line);
-			if (pathway_getter.find()) {
-			    String sp = pathway_getter.group(1);
-			    String path = pathway_getter.group(2);
-			    File org_conf = get_org_conf(sp, path);
-			    File map_conf = get_map_conf(path);
-			    ret.add(new File[]{org_conf, map_conf});
-			}
-			else break;
-		}
-	    }
-	} catch (Exception e) {
-	    System.out.println(e);
-	}
-	return ret;
-    }
 			    
     public static void main(String[] argv) {
         get_image_pathway("eco","00020");
