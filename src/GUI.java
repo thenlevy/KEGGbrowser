@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.IOException;
 import java.util.List;
+import java.io.File;
 
 /**
  * Graphical interface for KEGGbrowser
@@ -66,7 +69,7 @@ public class GUI extends JFrame {
     private JTextField pathway_mapID_field;
     private final static int PATHWAY_MAPID_FIELD_LENGTH = 6;
     private JButton pathway_search_btn;
-    private JScrollPane pathway_display;
+    private Pathway_display pathway_display;
 
     private JPanel pathway_right_panel;
     private JPanel pathway_right_menu;
@@ -179,7 +182,7 @@ public class GUI extends JFrame {
 	pathway_left_panel.setLayout(new BoxLayout(pathway_left_panel, BoxLayout.PAGE_AXIS));
 	pathway_left_panel.setAlignmentY(Component.TOP_ALIGNMENT);
 	pathway_left_panel.add(pathway_left_menu);
-	pathway_display = new JScrollPane();
+	pathway_display = new Pathway_display();
 	pathway_left_panel.add(pathway_display);
 
 	pathway_left_panel.setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
@@ -348,6 +351,30 @@ public class GUI extends JFrame {
 	}
     }
 
+    private class Pathway_display extends JScrollPane {
+	private ImageIcon ii;
+	private JLabel image_label;
+
+	public Pathway_display() {
+	    super();
+	    ii = new ImageIcon();
+	    image_label = new JLabel(ii);
+	    setViewportView(image_label);
+	}
+
+	public void change_img(File img_file) {
+	    try {
+		ii = new ImageIcon(ImageIO.read(img_file));
+		image_label = new JLabel(ii);
+		setViewportView(image_label);
+	    } catch (Exception e) {
+		System.out.println(e);
+	    }
+	    repaint();
+	}
+    }
+	
+
     private class Gene_reaction_menu extends JScrollPane implements ListSelectionListener {
 	private JList reaction_jlist;
 	public Gene_reaction_menu() {
@@ -382,7 +409,11 @@ public class GUI extends JFrame {
     public void set_browser_url(String new_url) {
 	genome_display.update_page(new_url);
     }
-	
+
+    public void update_pathway_img(File img) {
+	pathway_display.change_img(img);
+    }
+
 
 }
 

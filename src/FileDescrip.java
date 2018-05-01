@@ -19,19 +19,6 @@ import java.util.regex.Matcher;
 
 
 public class FileDescrip {
-    public static void open_file_local(String specie, String info, String categorie ){
-        if(Desktop.getDesktop().isSupported(java.awt.Desktop.Action.OPEN)){
-            try {
-                java.awt.Desktop.getDesktop().open(new File("../data/"+
-                                specie+"/"+categorie+"/"+ specie+ info));
-            } 
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
-
     private static void download_from_kegg(String url_name , String file_path){
         int last_seperator = file_path.lastIndexOf('/') ;
         String directory;
@@ -43,16 +30,15 @@ public class FileDescrip {
         }
         
         try{
-			URL url = new URL(url_name);
+	    URL url = new URL(url_name);
 
-			URLConnection path = url.openConnection();
-			System.out.println(path.getContent());
-			InputStream input = path.getInputStream();
+	    URLConnection path = url.openConnection();
+	    System.out.println(path.getContent());
+	    InputStream input = path.getInputStream();
           
             File dir = new File (directory);
             dir.mkdirs();
-            FileOutputStream fileOutputStream = new FileOutputStream(
-                                                new File(file_path ));
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(file_path));
 
             int i=0;
             while((i=input.read())!=-1){

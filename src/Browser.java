@@ -10,6 +10,7 @@ public class Browser {
     private String gen_genID; // "Gene ID" field of genome browser
     private String pathway_species; // "Sepecies" field of the pathway browser
     private String pathway_mapID;
+    private String displayed_pathway;
     private GUI gui;
     private Conf_reader conf_reader;
     private boolean debug_mode = false;
@@ -19,6 +20,7 @@ public class Browser {
 	gen_genID = ".....";
 	pathway_species = "...";
 	pathway_mapID = ".....";
+	displayed_pathway = "";
 
 	gui = new GUI(this);
     }
@@ -79,6 +81,7 @@ public class Browser {
 	if (debug_mode) {
 	    System.out.println("Pathway Browser Search " + pathway_species + " " + pathway_mapID);
 	}
+	update_pathway(pathway_species + pathway_mapID);
     }
 
     public void image() {
@@ -107,6 +110,15 @@ public class Browser {
 	    System.out.println("Selected index " + index);
 	}
     }
+
+    public void update_pathway(String pathway) {
+	if (displayed_pathway != pathway) {
+	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
+	    displayed_pathway = pathway;
+	}
+    }
+    
+	
 	
 
     public static void main(String[] args) {
