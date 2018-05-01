@@ -21,11 +21,11 @@ public class KEGG{
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
           
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File dir = new File ("../"
                             + specie + "/" + "GI" + "/"+ gene_id);
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/" 
+                "../"+specie + "/" 
                 + "GI" +"/" + gene_id + "/" + specie + gene_id));
 
             int i=0;
@@ -45,7 +45,7 @@ public class KEGG{
 		
 	}
 	public static void main(String[] argv) {
-        get_genome_data("eco" , "b0002");
+        get_genome_data("eco" , "b0630");
 		
 	}
 }

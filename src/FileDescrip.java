@@ -17,7 +17,7 @@ public class FileDescrip {
     public static void open_file_local(String specie, String info, String categorie ){
         if(Desktop.getDesktop().isSupported(java.awt.Desktop.Action.OPEN)){
             try {
-                java.awt.Desktop.getDesktop().open(new File("/Users/hassenebenyedder/KEGGbrowser/"+specie+"/"+categorie+"/"+ specie+ info));
+                java.awt.Desktop.getDesktop().open(new File("../data/"+specie+"/"+categorie+"/"+ specie+ info));
             } 
             catch (IOException e) {
                 e.printStackTrace();
@@ -44,11 +44,11 @@ public class FileDescrip {
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
           
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File dir = new File ("../data/"
                             + specie + "/GI/");
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/GI/" 
+                "../data/"+specie + "/GI/" 
                  + specie + gene_id));
 
             int i=0;
@@ -83,11 +83,11 @@ public class FileDescrip {
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
           
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File dir = new File ("../data/"
                             + specie + "/conf/");
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/conf/" 
+                "../data/"+specie + "/conf/" 
                  + specie + gene_id ));
 
             int i=0;
@@ -122,11 +122,11 @@ public class FileDescrip {
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
           
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"+ specie +
+            File dir = new File ("../data/"+ specie +
                                 "/" + "reaction");
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+ specie + 
+                "../data/"+ specie + 
                 "/reaction/"+ specie + reaction_id));
 
             int i=0;
@@ -163,11 +163,11 @@ public class FileDescrip {
             URL url = new URL(url_name);
             InputStream in = new BufferedInputStream(url.openStream());
             
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File dir = new File ("../data/"
                             + specie + "/pathway/");
             dir.mkdirs();
             OutputStream out = new BufferedOutputStream(
-            new FileOutputStream("/Users/hassenebenyedder/KEGGbrowser/"
+            new FileOutputStream("../data/"
                             + specie + "/pathway/" +specie + pathway));
 
             for ( int i; (i = in.read()) != -1; ) {
@@ -200,11 +200,11 @@ public class FileDescrip {
 			System.out.println(path.getContent());
 			InputStream input = path.getInputStream();
           
-            File dir = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File dir = new File ("../data/"
                             + specie + "/map_conf/");
             dir.mkdirs();
             FileOutputStream fileOutputStream = new FileOutputStream(new File(
-                "/Users/hassenebenyedder/KEGGbrowser/"+specie + "/map_conf/" 
+                "../data/"+specie + "/map_conf/" 
                  + specie + mapID ));
 
             int i=0;
@@ -225,7 +225,7 @@ public class FileDescrip {
 	}
     public static void file_finder(String specie, String info){
         if (info.startsWith("b")){
-            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+specie + 
+            File f = new File("../data/"+specie + 
             "/GI/" + info + "/" + specie + info );
             
             if(f.exists() && !f.isDirectory()){
@@ -240,7 +240,7 @@ public class FileDescrip {
             }
         }
         else if (info.startsWith("R")){
-            File f = new File("/Users/hassenebenyedder/KEGGbrowser/"+ specie +
+            File f = new File("../data/"+ specie +
                                 "reaction/"+specie + info);
             if(f.exists() && !f.isDirectory()){
                 open_file_local(specie, info , "reaction");
@@ -255,11 +255,11 @@ public class FileDescrip {
             
         else{
             
-            File f1 = new File("/Users/hassenebenyedder/KEGGbrowser/"
+            File f1 = new File("../data/"
                             + specie + "/" + "pathway" + "/"+ info );
-            File f2 = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File f2 = new File ("../data/"
                                 + specie + "/conf/" + specie + info );
-            File f3 = new File ("/Users/hassenebenyedder/KEGGbrowser/"
+            File f3 = new File ("../data/"
                                 +specie + "/map_conf/" + specie + info);
             if( (f1.exists() && !f1.isDirectory()) && 
                 (f2.exists() && !f2.isDirectory()) && 
