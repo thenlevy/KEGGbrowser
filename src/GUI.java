@@ -7,6 +7,10 @@ import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
 import javax.swing.JTextPane;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -17,6 +21,7 @@ import org.fit.cssbox.swingbox.BrowserPane;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Graphical interface for KEGGbrowser
@@ -49,7 +54,7 @@ public class GUI extends JFrame {
     private JPanel gen_right_panel; // right part of the genome browser
     private JPanel gen_right_menu;
     private Gene_info_display gene_information;
-    private JScrollPane involved_in_reactions;
+    private Gene_reaction_menu involved_in_reactions;
 
     // Pathway browser component
     private JPanel pathway_global_panel; // Whole pathway browser
@@ -127,7 +132,7 @@ public class GUI extends JFrame {
 
 	gen_right_panel.add(new JLabel("Involved in reaction(s)"));
 
-	involved_in_reactions = new JScrollPane();
+	involved_in_reactions = new Gene_reaction_menu();
 	gen_right_panel.add(involved_in_reactions);
 
 	gen_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, GEN_HEIGHT));
@@ -341,6 +346,33 @@ public class GUI extends JFrame {
 	    txt.setText(info);
 	    repaint();
 	}
+    }
+
+    private class Gene_reaction_menu extends JScrollPane implements ListSelectionListener {
+	private JList reaction_jlist;
+	public Gene_reaction_menu() {
+	    super();
+	    reaction_jlist = new JList();
+	    reaction_jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    reaction_jlist.addListSelectionListener(this);
+	    setViewportView(reaction_jlist);
+	}
+
+	public void set_list(List<String> lst) {
+	    String[] array = new String[lst.size()];
+	    array = lst.toArray(array);
+	    reaction_jlist.setListData(array);
+	    repaint();
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+	    if (!e.getValueIsAdjusting())
+		browser.select_reaction(reaction_jlist.getSelectedIndex());
+	}
+    }
+
+    public void set_gene_reaction_menu(List<String> lst) {
+	involved_in_reactions.set_list(lst);
     }
 
     public void set_gene_info_text(String new_text) {

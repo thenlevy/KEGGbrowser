@@ -71,6 +71,7 @@ public class Browser {
 				  + gen_species +"&ACCESSION=" + gen_genID);
 
 	gui.set_browser_url(new_browser_url);
+	gui.set_gene_reaction_menu(Conf_reader.get_all_reactions(gen_species, gen_genID));
     }
 
     public void pathway_search() {
@@ -98,6 +99,12 @@ public class Browser {
 	}
 	else {
 	    System.out.println("Clicked somewhere else");
+	}
+    }
+
+    public void select_reaction(int index) {
+	if (debug_mode) {
+	    System.out.println("Selected index " + index);
 	}
     }
 	
