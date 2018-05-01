@@ -64,7 +64,9 @@ public class Browser {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
 	}
-	gui.set_gene_info_text(KEGG.get_genome_data(gen_species, gen_genID));
+    File f = FileDescrip.get_gene_info(gen_species, gen_genID);
+    
+	gui.set_gene_info_text(FileDescrip.get_text_from_file(f));
 	String new_browser_url = ("http://www.genome.jp/kegg-bin/show_genomemap?ORG="
 				  + gen_species +"&ACCESSION=" + gen_genID);
 
