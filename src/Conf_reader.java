@@ -19,13 +19,26 @@ public class Conf_reader {
     private Hashtable<Integer, Org_rectangle> hash_org;
 
     public static void main(String arg[]) {
-	File org_file = new File("test_org.conf");
-	File map_file = new File("test_map.conf");
-	Conf_reader test_obj = new Conf_reader(org_file, map_file);
-	List<String> test = test_obj.get_reaction("b0630");
+	List<String> test = get_all_reactions("eco", "b0630");
 	for (String s : test) {
 	    System.out.println(s);
 	}
+    }
+
+    public static List<String> get_reaction(File org_file, File map_file, String gene_id) {
+	Conf_reader cr = new Conf_reader(org_file, map_file);
+	return cr.get_reaction(gene_id);
+    }
+
+    public static List<String> get_all_reactions(String specie, String gene_id) {
+	List<File[]> pathways = FileDescrip.get_pathway_files(specie, gene_id);
+	List<String> ret = new ArrayList<String>();
+	for (File p[] : pathways) {
+	    File org_file = p[0];
+	    File map_file = p[1];
+	    ret.addAll(get_reaction(org_file, map_file, gene_id));
+	}
+	return ret;
     }
 
     public Conf_reader(File org_f, File map_f) {
