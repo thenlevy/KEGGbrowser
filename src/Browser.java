@@ -15,6 +15,7 @@ public class Browser {
     private Conf_reader conf_reader;
     private boolean debug_mode = false;
     private List<String> reaction_list;
+    private List<String> involved_genes_list;
 
     public Browser() {
 	gen_species = "...";
@@ -93,7 +94,8 @@ public class Browser {
     }
 
     public void set_conf(File org_file, File map_file) {
-	conf_reader = new Conf_reader(org_file, map_file);
+	if (conf_reader == null || !conf_reader.check(org_file, map_file))
+	    conf_reader = new Conf_reader(org_file, map_file);
     }
 
     public void click_on_rectangle(int x, int y) {
@@ -110,18 +112,28 @@ public class Browser {
 	if (debug_mode) {
 	    System.out.println("Selected index " + index);
 	}
-	String pathway = reaction_list.get(index).split(" ")[2];
-	String reaction = reaction_list.get(index).split(" ")[0];
-	update_reaction(reaction, pathway);
+	if (index >= 0) {
+	    String pathway = reaction_list.get(index).split(" ")[2];
+	    String reaction = reaction_list.get(index).split(" ")[0];
+	    update_reaction(reaction, pathway);
+	}
     }
 
     private void update_reaction(String reaction, String pathway) {
 	int specie_name_length = pathway.length() - 5;
-	pathway_species = pathway.substring(0, specie_name_length - 1);
+	pathway_species = pathway.substring(0, specie_name_length);
 	pathway_mapID = pathway.substring(specie_name_length);
 	update_pathway(pathway);
 	File f = FileDescrip.get_reaction_data(reaction);
 	gui.set_reaction_info(FileDescrip.get_text_from_file(f));
+
+	File org_file = FileDescrip.get_org_conf(pathway_species, pathway_mapID);
+	File map_file = FileDescrip.get_map_conf(pathway_mapID);
+	set_conf(org_file, map_file);
+	involved_genes_list = conf_reader.get_genes_involved(reaction);
+	for (String s : involved_genes_list) {
+	    System.out.println(s);
+	}
     }
 	
 
@@ -140,9 +152,6 @@ public class Browser {
 		@Override
 		public void run() {
 		    Browser b = new Browser(true);
-		    b.set_conf(new File("test_org.conf"), new File("test_map.conf"));
-		    b.click_on_rectangle(5, 5);
-		    b.click_on_rectangle(200, 300);
 		    
 		}
 	    });

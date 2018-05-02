@@ -16,6 +16,7 @@ public class Conf_reader {
     private File org_file;
     private File map_file;
     private Hashtable<Integer, Map_rectangle> hash_map;
+    private Hashtable<String, Map_rectangle> hash_reaction;
     private Hashtable<Integer, Org_rectangle> hash_org;
 
     public static void main(String arg[]) {
@@ -77,13 +78,14 @@ public class Conf_reader {
 	map_file = map_f;
 
 	make_hash_map();
-	make_org_map();
+	make_hash_org();
     }
 
     /** Read the map conf file and create the Map_rectangle and store them in the Hashtable hash_map
      */
     private void make_hash_map() {
 	hash_map = new Hashtable<Integer, Map_rectangle>();
+	hash_reaction = new Hashtable<String, Map_rectangle>();
 	try {
 	    BufferedReader map_reader = new BufferedReader(new FileReader(map_file));
 	    String line = "";
@@ -91,6 +93,9 @@ public class Conf_reader {
 		if (line.startsWith("rect")) {
 		    Map_rectangle rect = Map_rectangle.from_line(line);
 		    hash_map.put(rect.get_hash(), rect);
+		    for (String reaction : rect.get_reactions()) {
+			hash_reaction.put(reaction, rect);
+		    }
 		}
 	    }
 	} catch (Exception e) {
@@ -100,7 +105,7 @@ public class Conf_reader {
 
     /** Read the org conf file and create the Org_rectangle and store them in the Hashtable hash_org
      */
-    private void make_org_map() {
+    private void make_hash_org() {
 	hash_org = new Hashtable<Integer, Org_rectangle>();
 	try {
 	    BufferedReader org_reader = new BufferedReader(new FileReader(org_file));
@@ -138,6 +143,23 @@ public class Conf_reader {
 	}
 	return ret;
     }
+
+    public List<String> get_genes_involved(String reaction) {
+	int key = hash_reaction.get(reaction).get_hash();
+	return hash_org.get(key).get_genes();
+    }
+
+    public boolean check(File o_file, File m_file) {
+	try {
+	    return (o_file.getCanonicalPath().equals(org_file.getCanonicalPath())
+		    && m_file.getCanonicalPath().equals(map_file.getCanonicalPath()));
+	} catch (Exception e) {
+	    System.out.println(e);
+	    return false;
+	}
+    }
+	    
+	
 }
 
 
@@ -221,6 +243,10 @@ class Org_rectangle extends Conf_rectangle {
 
     public boolean has_gene(String gene) {
 	return genes.contains(gene);
+    }
+
+    public List<String> get_genes() {
+	return new ArrayList<String>(genes);
     }
 
     @Override
