@@ -67,7 +67,7 @@ public class Browser {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
 	}
-    File f = FileDescrip.get_gene_info(gen_species, gen_genID);
+	File f = FileDescrip.get_gene_info(gen_species, gen_genID);
     
 	gui.set_gene_info_text(FileDescrip.get_text_from_file(f));
 	String new_browser_url = ("http://www.genome.jp/kegg-bin/show_genomemap?ORG="
@@ -111,13 +111,21 @@ public class Browser {
 	    System.out.println("Selected index " + index);
 	}
 	String pathway = reaction_list.get(index).split(" ")[2];
+	String reaction = reaction_list.get(index).split(" ")[0];
+	update_reaction(reaction, pathway);
+    }
+
+    private void update_reaction(String reaction, String pathway) {
 	int specie_name_length = pathway.length() - 5;
 	pathway_species = pathway.substring(0, specie_name_length - 1);
 	pathway_mapID = pathway.substring(specie_name_length);
 	update_pathway(pathway);
+	File f = FileDescrip.get_reaction_data(reaction);
+	gui.set_reaction_info(FileDescrip.get_text_from_file(f));
     }
+	
 
-    public void update_pathway(String pathway) {
+    private void update_pathway(String pathway) {
 	if (!displayed_pathway.equals(pathway)) {
 	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
 	    displayed_pathway = pathway;

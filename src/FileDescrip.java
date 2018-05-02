@@ -99,9 +99,8 @@ public class FileDescrip {
         
         return get_file(url_name , file_path); 
     }
-    public static File get_reaction_data(String specie, String reaction_id){
-        String file_path = ("../data/"+ specie + "/reaction/"+ specie 
-                            + reaction_id );
+    public static File get_reaction_data(String reaction_id){
+        String file_path = ("../data/reaction/" + reaction_id );
         String url_name = ("http://rest.kegg.jp/get/rn:" + reaction_id);
         
         return get_file(url_name , file_path); 

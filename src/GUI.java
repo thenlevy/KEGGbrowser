@@ -74,7 +74,7 @@ public class GUI extends JFrame {
     private JPanel pathway_right_panel;
     private JPanel pathway_right_menu;
     private JButton pathway_image_btn;
-    private JScrollPane reaction_information;
+    private Reaction_info_display reaction_information;
     private JScrollPane involves_gens;
 
     public GUI(Browser b) {
@@ -208,10 +208,7 @@ public class GUI extends JFrame {
 	pathway_right_panel.setAlignmentY(Component.TOP_ALIGNMENT);
 
 	pathway_right_panel.add(pathway_right_menu);
-	reaction_information = new JScrollPane();
-	reaction_information.setPreferredSize(new Dimension(RIGHT_WIDTH, REACTION_INFO_HEIGHT));
-	reaction_information.setPreferredSize(new Dimension(reaction_information.getMaximumSize().width,
-							    REACTION_INFO_HEIGHT));
+	reaction_information = new Reaction_info_display();
 	pathway_right_panel.add(reaction_information);
 	pathway_right_panel.add(new JLabel("Involves gene(s)"));
 
@@ -334,9 +331,9 @@ public class GUI extends JFrame {
 	}
     }
 
-    private class Gene_info_display extends JScrollPane {
+    protected class Info_display extends JScrollPane {
 	private JTextPane txt;
-	public Gene_info_display() {
+	public Info_display() {
 	    super();
 	    setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
 	    //setMaximumSize(new Dimension(getMaximumSize().width,
@@ -350,6 +347,21 @@ public class GUI extends JFrame {
 	    repaint();
 	}
     }
+
+    private class Gene_info_display extends Info_display {
+	public Gene_info_display() {
+	    super();
+	    setPreferredSize(new Dimension(RIGHT_WIDTH, GENE_INFO_HEIGHT));
+	}
+    }
+
+    private class Reaction_info_display extends Info_display {
+	public Reaction_info_display() {
+	    super();
+	    setPreferredSize(new Dimension(RIGHT_WIDTH, REACTION_INFO_HEIGHT));
+	}
+    }
+	
 
     private class Pathway_display extends JScrollPane {
 	private ImageIcon ii;
@@ -404,6 +416,10 @@ public class GUI extends JFrame {
 
     public void set_gene_info_text(String new_text) {
 	    gene_information.set_text(new_text);
+    }
+
+    public void set_reaction_info(String new_text) {
+	reaction_information.set_text(new_text);
     }
 
     public void set_browser_url(String new_url) {
