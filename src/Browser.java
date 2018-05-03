@@ -124,6 +124,8 @@ public class Browser {
 	    String reaction = reaction_list.get(index).split(" ")[0];
 	    reaction_species = gen_species;
 	    update_reaction(reaction, pathway);
+	    Conf_rectangle rect = conf_reader.get_rect_from_reaction(reaction);
+	    gui.select_rectangle(rect);
 	}
     }
 
