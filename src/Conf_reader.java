@@ -93,9 +93,8 @@ public class Conf_reader {
 		if (line.startsWith("rect")) {
 		    Map_rectangle rect = Map_rectangle.from_line(line);
 		    hash_map.put(rect.get_hash(), rect);
-		    for (String reaction : rect.get_reactions()) {
-			hash_reaction.put(reaction, rect);
-		    }
+		    String reaction = rect.get_reactions();
+		    hash_reaction.put(reaction, rect);
 		}
 	    }
 	} catch (Exception e) {
@@ -130,15 +129,19 @@ public class Conf_reader {
 	return new Conf_rectangle();
     }
 
+    public String get_reaction_from_rect(Conf_rectangle rect) {
+	Map_rectangle m_rect = hash_map.get(rect.get_hash());
+	return m_rect.get_reactions();
+    }
+
     public List<String> get_reaction(String gene_interest) {
 	List<String> ret = new ArrayList<String>();
 	
 	for (Org_rectangle rect : hash_org.values()) {
 	    if (rect.has_gene(gene_interest)) {
 		Map_rectangle map_rect = hash_map.get(rect.get_hash());
-		for (String reaction : map_rect.get_reactions()) {
-		    ret.add(reaction);
-		}
+	        String reaction = map_rect.get_reactions();
+		ret.add(reaction);
 	    }
 	}
 	return ret;
@@ -166,12 +169,11 @@ public class Conf_reader {
 
 class Map_rectangle extends Conf_rectangle {
     private HashSet<String> k_nums;
-    private HashSet<String> r_nums;
+    private String r_nums = "";
 
     private Map_rectangle(Conf_rectangle cr) {
 	super(cr);
 	k_nums = new HashSet<String>();
-	r_nums = new HashSet<String>();
     }
 	 
     public static Map_rectangle from_line(String s) {
@@ -186,13 +188,13 @@ class Map_rectangle extends Conf_rectangle {
 	Pattern rnum = Pattern.compile("R[0-9]{5}");
 	Matcher rnum_getter = rnum.matcher(s);
 	while (rnum_getter.find()) {
-	    ret.r_nums.add(rnum_getter.group());
+	    ret.r_nums = (rnum_getter.group());
 	}
 	return ret;
     }
 
     public boolean has_reacton(String react) {
-	return r_nums.contains(react);
+	return r_nums.equals(react);
     }
 
     @Override
@@ -205,16 +207,15 @@ class Map_rectangle extends Conf_rectangle {
 		ret += (knum + " ");
 	}
 
-	if (!r_nums.isEmpty()) {
+	if (!r_nums.equals("")) {
 	    ret += "\n";
-	    for (String rnum : r_nums)
-		ret += (rnum + " ");
+	    ret += r_nums;
 	}
 
 	return ret;
     }
 
-    public HashSet<String> get_reactions() {
+    public String get_reactions() {
 	return r_nums;
     }
 }

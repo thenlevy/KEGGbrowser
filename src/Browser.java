@@ -10,6 +10,7 @@ public class Browser {
     private String gen_genID; // "Gene ID" field of genome browser
     private String pathway_species; // "Sepecies" field of the pathway browser
     private String pathway_mapID;
+    private String reaction_species;
     private String displayed_pathway;
     private GUI gui;
     private Conf_reader conf_reader;
@@ -104,6 +105,10 @@ public class Browser {
 	if (rect.is_true_rectangle()) {
 	    System.out.println("Clicked on rectangle" + rect.to_str());
 	    gui.select_rectangle(rect);
+	    reaction_species = pathway_species;
+	    String reaction = conf_reader.get_reaction_from_rect(rect);
+	    update_reaction(reaction, displayed_pathway);
+	    
 	}
 	else {
 	    System.out.println("Clicked somewhere else");
@@ -117,6 +122,7 @@ public class Browser {
 	if (index >= 0) {
 	    String pathway = reaction_list.get(index).split(" ")[2];
 	    String reaction = reaction_list.get(index).split(" ")[0];
+	    reaction_species = gen_species;
 	    update_reaction(reaction, pathway);
 	}
     }
@@ -128,6 +134,7 @@ public class Browser {
 	if (index >= 0) {
 	    if (!gen_genID.equals(involved_genes_list.get(index))) {
 		gen_genID = involved_genes_list.get(index);
+		gen_species = reaction_species;
 		gen_search();
 	    }
 	}
