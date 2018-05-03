@@ -65,4 +65,20 @@ public class Conf_rectangle {
     public String to_str() {
 	return ("(" + left + "," + top + ")(" + right + "," + bot + ")");
     }
+
+    public int get_left() {
+	return left;
+    }
+
+    public int get_top() {
+	return top;
+    }
+
+    public int get_right() {
+	return right;
+    }
+
+    public int get_bot() {
+	return bot;
+    }
 }

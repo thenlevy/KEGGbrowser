@@ -17,8 +17,16 @@ import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.BasicStroke;
+import java.awt.image.BufferedImage;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import org.fit.cssbox.swingbox.BrowserPane;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -364,27 +372,91 @@ public class GUI extends JFrame {
 	
 
     private class Pathway_display extends JScrollPane {
-	private ImageIcon ii;
-	private JLabel image_label;
+	private BufferedImage pathway_img = null;
+	private Pathway_panel panel;
 
 	public Pathway_display() {
 	    super();
-	    ii = new ImageIcon();
-	    image_label = new JLabel(ii);
-	    setViewportView(image_label);
+	    panel = new Pathway_panel();
+	    setViewportView(panel);
+	    setPreferredSize(new Dimension(LEFT_WIDTH, PATHWAY_HEIGHT));
+	}
+
+	public void change_img(File img_file) {
+	    panel.change_img(img_file);
+	    setViewportView(panel);
+	    validate();
+	}
+
+	public void set_selection(Conf_rectangle rect) {
+	    panel.set_selection(rect);
+	}
+	    
+    }
+
+    private class Pathway_panel extends JPanel implements MouseListener {
+	private BufferedImage pathway_img = null;
+	private Rectangle selection = null;
+	private final int selection_thickness = 3;
+	    
+	public Pathway_panel() {
+	    super();
+	    addMouseListener(this);
 	}
 
 	public void change_img(File img_file) {
 	    try {
-		ii = new ImageIcon(ImageIO.read(img_file));
-		image_label = new JLabel(ii);
-		setViewportView(image_label);
+		pathway_img = ImageIO.read(img_file);
 	    } catch (Exception e) {
 		System.out.println(e);
 	    }
+	    selection = null;
 	    repaint();
 	}
+
+	protected void paintComponent(Graphics g) {
+	    super.paintComponent(g);
+	    Graphics2D g2d = (Graphics2D) g.create();
+	    if (pathway_img != null)
+		g2d.drawImage(pathway_img, 0, 0, this);
+	    if (selection != null) {
+		g2d.setColor(Color.blue);
+		g2d.setStroke(new BasicStroke(selection_thickness));
+		g2d.draw(selection);
+	    }
+	    g2d.dispose();
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+	    return (pathway_img == null ?
+		    new Dimension(0, 0)
+		    : new Dimension(pathway_img.getWidth(), pathway_img.getHeight()));
+	}
+
+	public void set_selection(Conf_rectangle rect) {
+	    selection = new Rectangle(rect.get_left() - selection_thickness,
+				      rect.get_top() - selection_thickness,
+				      rect.get_right() - rect.get_left() + 2 * selection_thickness,
+				      rect.get_bot() - rect.get_top() + 2 * selection_thickness);
+	    repaint();
+	}
+	    
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) { }
+
+	public void mouseEntered(MouseEvent e) { }
+
+	public void mouseExited(MouseEvent e) { }
+
+	public void mouseClicked(MouseEvent e) {
+	    browser.click_on_rectangle(e.getX(), e.getY());
+	}
     }
+	    
+
 	
     private abstract class Kegg_menu extends JScrollPane implements ListSelectionListener {
 	protected JList reaction_jlist;
@@ -452,6 +524,9 @@ public class GUI extends JFrame {
 	pathway_display.change_img(img);
     }
 
+    public void select_rectangle(Conf_rectangle rect) {
+	pathway_display.set_selection(rect);
+    }
 
 }
 

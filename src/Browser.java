@@ -103,6 +103,7 @@ public class Browser {
 	Conf_rectangle rect = conf_reader.find_rect(x, y);
 	if (rect.is_true_rectangle()) {
 	    System.out.println("Clicked on rectangle" + rect.to_str());
+	    gui.select_rectangle(rect);
 	}
 	else {
 	    System.out.println("Clicked somewhere else");
@@ -156,12 +157,12 @@ public class Browser {
 	if (!displayed_pathway.equals(pathway)) {
 	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
 	    displayed_pathway = pathway;
+	    File org_file = FileDescrip.get_org_conf(pathway_species, pathway_mapID);
+	    File map_file = FileDescrip.get_map_conf(pathway_mapID);
+	    set_conf(org_file, map_file);
 	    gui.refresh_gui();
 	}
     }
-    
-	
-	
 
     public static void main(String[] args) {
 	SwingUtilities.invokeLater(new Runnable() {
