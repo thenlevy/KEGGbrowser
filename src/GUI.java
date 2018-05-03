@@ -75,7 +75,7 @@ public class GUI extends JFrame {
     private JPanel pathway_right_menu;
     private JButton pathway_image_btn;
     private Reaction_info_display reaction_information;
-    private JScrollPane involves_gens;
+    private Involved_gene_menu involved_gene_menu;
 
     public GUI(Browser b) {
 	browser = b;
@@ -212,8 +212,8 @@ public class GUI extends JFrame {
 	pathway_right_panel.add(reaction_information);
 	pathway_right_panel.add(new JLabel("Involves gene(s)"));
 
-	involves_gens = new JScrollPane();
-	pathway_right_panel.add(involves_gens);
+	involved_gene_menu = new Involved_gene_menu();
+	pathway_right_panel.add(involved_gene_menu);
 	pathway_right_panel.setPreferredSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
 	//pathway_right_panel.setMaximumSize(new Dimension(RIGHT_WIDTH, PATHWAY_HEIGHT));
 	//=============================================================================================
@@ -242,7 +242,7 @@ public class GUI extends JFrame {
 	refresh_gui();
 	}
 
-    private void refresh_gui() {
+    public void refresh_gui() {
 	gen_species_field.setText(browser.get_gen_species());
 	gen_genID_field.setText(browser.get_gen_genID());
 	pathway_species_field.setText(browser.get_pathway_species());
@@ -386,10 +386,9 @@ public class GUI extends JFrame {
 	}
     }
 	
-
-    private class Gene_reaction_menu extends JScrollPane implements ListSelectionListener {
-	private JList reaction_jlist;
-	public Gene_reaction_menu() {
+    private abstract class Kegg_menu extends JScrollPane implements ListSelectionListener {
+	protected JList reaction_jlist;
+	public Kegg_menu() {
 	    super();
 	    reaction_jlist = new JList();
 	    reaction_jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -404,14 +403,37 @@ public class GUI extends JFrame {
 	    repaint();
 	}
 
+	public abstract void valueChanged(ListSelectionEvent e);
+    }
+
+    private class Gene_reaction_menu extends Kegg_menu {
+	public Gene_reaction_menu() {
+	    super();
+	}
+
 	public void valueChanged(ListSelectionEvent e) {
 	    if (!e.getValueIsAdjusting())
 		browser.select_reaction(reaction_jlist.getSelectedIndex());
 	}
     }
 
+    private class Involved_gene_menu extends Kegg_menu {
+	public Involved_gene_menu() {
+	    super();
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+	    if (!e.getValueIsAdjusting())
+		browser.select_gene(reaction_jlist.getSelectedIndex());
+	}
+    }
+
     public void set_gene_reaction_menu(List<String> lst) {
 	involved_in_reactions.set_list(lst);
+    }
+
+    public void set_involved_gene_menu(List<String> lst) {
+	involved_gene_menu.set_list(lst);
     }
 
     public void set_gene_info_text(String new_text) {

@@ -77,6 +77,7 @@ public class Browser {
 	gui.set_browser_url(new_browser_url);
 	reaction_list = Conf_reader.get_all_reactions(gen_species, gen_genID);
 	gui.set_gene_reaction_menu(reaction_list);
+	gui.refresh_gui();
     }
 
     public void pathway_search() {
@@ -119,6 +120,18 @@ public class Browser {
 	}
     }
 
+    public void select_gene(int index) {
+	if (debug_mode) {
+	    System.out.println("Selected index " + index);
+	}
+	if (index >= 0) {
+	    if (!gen_genID.equals(involved_genes_list.get(index))) {
+		gen_genID = involved_genes_list.get(index);
+		gen_search();
+	    }
+	}
+    }
+
     private void update_reaction(String reaction, String pathway) {
 	int specie_name_length = pathway.length() - 5;
 	pathway_species = pathway.substring(0, specie_name_length);
@@ -131,9 +144,11 @@ public class Browser {
 	File map_file = FileDescrip.get_map_conf(pathway_mapID);
 	set_conf(org_file, map_file);
 	involved_genes_list = conf_reader.get_genes_involved(reaction);
+	gui.set_involved_gene_menu(involved_genes_list);
 	for (String s : involved_genes_list) {
 	    System.out.println(s);
 	}
+	gui.refresh_gui();
     }
 	
 
@@ -141,6 +156,7 @@ public class Browser {
 	if (!displayed_pathway.equals(pathway)) {
 	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
 	    displayed_pathway = pathway;
+	    gui.refresh_gui();
 	}
     }
     
