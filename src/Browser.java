@@ -155,9 +155,6 @@ public class Browser {
 	set_conf(org_file, map_file);
 	involved_genes_list = conf_reader.get_genes_involved(reaction);
 	gui.set_involved_gene_menu(involved_genes_list);
-	for (String s : involved_genes_list) {
-	    System.out.println(s);
-	}
 	gui.refresh_gui();
     }
 	

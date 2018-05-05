@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.JTextPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.ImageIcon;
@@ -462,16 +463,21 @@ public class GUI extends JFrame {
 	protected JList reaction_jlist;
 	public Kegg_menu() {
 	    super();
-	    reaction_jlist = new JList();
+	    reaction_jlist = new JList(new DefaultListModel());
 	    reaction_jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    reaction_jlist.addListSelectionListener(this);
 	    setViewportView(reaction_jlist);
 	}
 
 	public void set_list(List<String> lst) {
-	    String[] array = new String[lst.size()];
-	    array = lst.toArray(array);
-	    reaction_jlist.setListData(array);
+	    if (lst == null) {
+		reaction_jlist.setListData(new String[0]);
+	    }
+	    else {
+		String[] array = new String[lst.size()];
+		array = lst.toArray(array);
+		reaction_jlist.setListData(array);
+	    }
 	    repaint();
 	}
 

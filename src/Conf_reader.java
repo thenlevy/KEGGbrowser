@@ -149,7 +149,10 @@ public class Conf_reader {
 
     public List<String> get_genes_involved(String reaction) {
 	int key = hash_reaction.get(reaction).get_hash();
-	return hash_org.get(key).get_genes();
+	if (hash_org.containsKey(key))
+	    return hash_org.get(key).get_genes();
+	else
+	    return null;
     }
 
     public boolean check(File o_file, File m_file) {
