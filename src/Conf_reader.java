@@ -210,7 +210,10 @@ public class Conf_reader {
 	    return false;
 	}
     }
-	    
+    
+    public Conf_rectangle get_rect_from_reaction(String reaction) {
+        return hash_reaction.get(reaction);
+    }
 	
 }
 
