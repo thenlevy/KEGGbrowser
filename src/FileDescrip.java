@@ -17,57 +17,83 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 
-
+/**
+ * open local files from a data repertory in KEGGbrowser path 
+ * after downloading them from KEGG internet data base
+ * */
 public class FileDescrip {
+    /**
+     * get a url and a file path
+     * search the info in the internet using the url
+     * store the information in a local file
+     * */
     private static void download_from_kegg(String url_name , String file_path){
+        // search the last reccurence  of the "/" in the file
         int last_seperator = file_path.lastIndexOf('/') ;
         String directory;
-        if (last_seperator == -1){
+        if (last_seperator == -1){ // if there is not a "/"
             directory = "." ;
         }
-        else {
-            directory = file_path.substring(0,last_seperator);
+        else { // if we found the last "/"
+            // directory takes the str before the slash and the slash
+            directory = file_path.substring(0,last_seperator); 
         }
         
         try{
-	    URL url = new URL(url_name);
-
-	    URLConnection path = url.openConnection();
-	    System.out.println(path.getContent());
-	    InputStream input = path.getInputStream();
-          
+            // create a new url
+            URL url = new URL(url_name);
+            // open the url
+            URLConnection path = url.openConnection();
+            // store the informations in a variable
+            System.out.println(path.getContent());
+            InputStream input = path.getInputStream();
+            
+            // create a new file  
             File dir = new File (directory);
             dir.mkdirs();
+            // put it in a file path
             FileOutputStream fileOutputStream = new FileOutputStream(new File(file_path));
 
             int i=0;
+            // read the variable with info and write in the file created
             while((i=input.read())!=-1){
                 fileOutputStream.write((char)i);
             }
+            // close new file
             fileOutputStream.close();
+            // close input
             input.close();
 
 		}
+        // treat url exception
 		catch(MalformedURLException e){
 			System.out.println(e);
 		}
+        // treat interrputed exception
 		catch(IOException e){
 			System.out.println(e);
 		}
 		
 	}
+    /**
+     * checks if the information exists locally or should be downloaded 
+     * and returns the file corresponding  */
     private static File get_file(String url ,String file_path){
         File f = new File(file_path);
+        // if the file exists in the directory then return it
         if(f.exists() && !f.isDirectory()){
                 return f;
         }
-        else{
+        else{ // if the file doesn't exists
+            // download info and create the file and returns it
             download_from_kegg(url, file_path);
             return f;
         }
     }
     
-    
+    /**
+     * returns a string with all information in a file
+     * */
     public static String get_text_from_file(File f) {
         String ret = "";
         try {
@@ -82,15 +108,24 @@ public class FileDescrip {
         }
         return ret;
     }
-    
+    /**
+     * Return a file corresponding to a given gene and specie
+     * */
     public static File get_gene_info(String specie, String gene_id){
+        // create the file_path
         String file_path = ("../data/" + specie + "/gene/" + specie + "_"
                             + gene_id );
+        // create the url to search the informations
         String url_name = ("http://rest.kegg.jp/get/"+ specie + ":"  
 							+ gene_id);
+        // return a file by calling get_file to check either it's local
+        // or not
         return get_file(url_name , file_path); 
                             
     }
+    /**
+     * Return a conf file corresponding to a given pathway and specie
+     * */
     public static File get_org_conf(String specie, String path_id){
         String file_path = ("../data/" + specie + "/conf/" + specie + "_"
                             + path_id + ".conf" );
@@ -99,12 +134,20 @@ public class FileDescrip {
         
         return get_file(url_name , file_path); 
     }
+    
+    /**
+     * Return a file with informations of a given reaction 
+     * */
     public static File get_reaction_data(String reaction_id){
         String file_path = ("../data/reaction/" + reaction_id );
         String url_name = ("http://rest.kegg.jp/get/rn:" + reaction_id);
         
         return get_file(url_name , file_path); 
     }
+    
+    /**
+     * Return a conf file corresponding to a given pathway map
+     * */
     public static File get_map_conf(String map_id){
         String file_path =("../data/map_conf/" + map_id + ".conf");
         String url_name = ("http://rest.kegg.jp/get/map"
@@ -112,6 +155,10 @@ public class FileDescrip {
         return get_file(url_name , file_path);
     }
     
+    /**
+     * Return an image file of the pathway map corresponding 
+     * to a given pathway and specie
+     * */
     public static File get_image_pathway(String specie, String pathway) {
 		String file_path =("../data/"+ specie + "/pathway/" +
                             specie + pathway);
@@ -122,9 +169,9 @@ public class FileDescrip {
 	}
 
 			    
-    public static void main(String[] argv) {
-        get_image_pathway("eco","00020");
-        }
+   // public static void main(String[] argv) {
+    //    get_image_pathway("eco","00020");
+    //    }
 
 }
 

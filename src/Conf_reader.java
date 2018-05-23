@@ -26,19 +26,19 @@ public class Conf_reader {
 	}
     }
     /**
-      *renvoie la liste des reactions( contexte de voies metaboliques)
-      *  impliquant un gene donné */
+      *return the reaction list ( metabolic pathways)
+      *  involves a given gene  */
     public static List<String> get_all_reactions(String specie, String gene_id) {
-        //cherche toutes les voies impliquant le gene
+        //search all pathways that involves the gene
         List<String> pathways = get_pathway_files(specie, gene_id); 
         List<String> ret = new ArrayList<String>();
         for (String path : pathways) { 
-            // pour chaque voie on cherche les fichiers conf
+            // for each pathway, search the conf file
             File org_file = FileDescrip.get_org_conf(specie, path);
             File map_file = FileDescrip.get_map_conf(path);
-            // on récupère les reactions à partir des fichiers conf
+            // store reactions from conf files
             List<String> reactions = get_reaction(org_file, map_file, gene_id);
-            // on ajoute les reactions aux résultats
+            // add the reactions to the list
             for (String reaction : reactions) {
             ret.add(reaction + " @ " + specie + path);
             }
