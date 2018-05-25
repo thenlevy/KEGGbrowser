@@ -12,6 +12,7 @@ public class Browser {
     private String pathway_mapID;
     private String reaction_species;
     private String displayed_pathway;
+    private String reaction;
     private GUI gui;
     private Conf_reader conf_reader;
     private boolean debug_mode = false;
@@ -91,8 +92,9 @@ public class Browser {
     public void image() {
 	// TODO implement this function
 	if (debug_mode) {
-	    System.out.println("Image button pressed");
+	    System.out.println("Image button pressed" + reaction);
 	}
+	gui.popup_image(FileDescrip.get_reaction_img(reaction));
     }
 
     public void set_conf(File org_file, File map_file) {
@@ -106,7 +108,7 @@ public class Browser {
 	    System.out.println("Clicked on rectangle" + rect.to_str());
 	    gui.select_rectangle(rect);
 	    reaction_species = pathway_species;
-	    String reaction = conf_reader.get_reaction_from_rect(rect);
+	    reaction = conf_reader.get_reaction_from_rect(rect);
 	    update_reaction(reaction, displayed_pathway);
 	    
 	}
@@ -121,7 +123,7 @@ public class Browser {
 	}
 	if (index >= 0) {
 	    String pathway = reaction_list.get(index).split(" ")[2];
-	    String reaction = reaction_list.get(index).split(" ")[0];
+	    reaction = reaction_list.get(index).split(" ")[0];
 	    reaction_species = gen_species;
 	    update_reaction(reaction, pathway);
 	    Conf_rectangle rect = conf_reader.get_rect_from_reaction(reaction);

@@ -13,6 +13,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.imageio.ImageIO;
 import java.awt.FlowLayout;
 import java.awt.Container;
@@ -204,7 +205,7 @@ public class GUI extends JFrame {
 
 	pathway_right_menu.add(new JLabel("Reaction information"));
 	pathway_right_menu.add(Box.createHorizontalGlue());
-	pathway_image_btn = new JButton("Image");
+	pathway_image_btn = new Image_button();
 	pathway_right_menu.add(pathway_image_btn);
 	pathway_right_menu.setPreferredSize(new Dimension(RIGHT_WIDTH,
 							pathway_image_btn.getPreferredSize().height));
@@ -536,6 +537,27 @@ public class GUI extends JFrame {
     public void select_rectangle(Conf_rectangle rect) {
 	pathway_display.set_selection(rect);
     }
+
+    class Image_button extends JButton implements ActionListener {
+	public Image_button() {
+	    super("Image");
+	    addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	    browser.image();
+	}
+    }
+	
+
+    public void popup_image(File img_file) {
+	JDialog popup = new JDialog();
+	JLabel label = new JLabel(new ImageIcon(img_file.getAbsolutePath()));
+	popup.add(label);
+	popup.pack();
+	popup.setVisible(true);
+    }
+	
 
 }
 

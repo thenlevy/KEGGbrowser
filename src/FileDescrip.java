@@ -144,6 +144,13 @@ public class FileDescrip {
         
         return get_file(url_name , file_path); 
     }
+
+    public static File get_reaction_img(String reaction_id){
+        String file_path = ("../data/reaction/image/" + reaction_id );
+        String url_name = ("http://rest.kegg.jp/get/rn:" + reaction_id + "/image");
+        
+        return get_file(url_name , file_path); 
+    }
     
     /**
      * Return a conf file corresponding to a given pathway map
