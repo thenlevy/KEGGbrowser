@@ -325,18 +325,19 @@ public class GUI extends JFrame {
 	private BrowserPane content;
 	public Genome_display() {
 	    super();
-	    content = new BrowserPane();
-	    setViewportView(content);
 	}
 
 	public void update_page(String new_url) {
+	    content = new BrowserPane();
 	    try {
-		content.setPage(new URL(new_url));
+		content.setPage(new_url);
+		setViewportView(content);
 	    } catch(MalformedURLException e) {
 		content.setText(e.toString());
 	    } catch(IOException e) {
 		content.setText(e.toString());
 	    }
+	    setViewportView(content);
 	}
     }
 
@@ -523,6 +524,8 @@ public class GUI extends JFrame {
     }
 
     public void set_browser_url(String new_url) {
+	genome_display.update_page(new_url);
+	genome_display.update_page(null);
 	genome_display.update_page(new_url);
     }
 
