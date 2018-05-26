@@ -21,13 +21,18 @@ public class Conf_reader {
 
     public static void main(String arg[]) {
 	List<String> test = get_all_reactions("eco", "b0630");
-	for (String s : test) {
-	    System.out.println(s);
-	}
+        for (String s : test) {
+            System.out.println(s);
+        }
     }
+    
     /**
       *return the reaction list ( metabolic pathways)
-      *  involves a given gene  */
+      *  involves a given gene
+      * @param initials of a wanted specie, the ID of the wanted gene
+      * @return a list of metabolic pathways that implicates the given
+      * gene
+      * */
     public static List<String> get_all_reactions(String specie, String gene_id) {
         //search all pathways that involves the gene
         List<String> pathways = get_pathway_files(specie, gene_id); 
@@ -40,7 +45,7 @@ public class Conf_reader {
             List<String> reactions = get_reaction(org_file, map_file, gene_id);
             // add the reactions to the list
             for (String reaction : reactions) {
-            ret.add(reaction + " @ " + specie + path);
+                ret.add(reaction + " @ " + specie + path);
             }
         }
         return ret;
@@ -87,6 +92,8 @@ public class Conf_reader {
     /**
       * Return a list of reaction involving a given gene 
       * from a pair of conf files 
+      * @param the organism file, a map file and a chosen gene
+      * @return a list of reaction involving a given gene
       */
     public static List<String> get_reaction(File org_file, File map_file, String gene_id) {
 	Conf_reader cr = new Conf_reader(org_file, map_file);
@@ -101,7 +108,8 @@ public class Conf_reader {
 	make_hash_org();
     }
 
-    /** Read the map conf file and create the Map_rectangle and store them in the Hashtable hash_map
+    /** Read the map conf file and create the Map_rectangle 
+     * and store them in the Hashtable hash_map
      */
     private void make_hash_map() {
 	hash_map = new Hashtable<Integer, Map_rectangle>();
@@ -126,7 +134,8 @@ public class Conf_reader {
 	}
     }
 
-    /** Read the org conf file and create the Org_rectangle and store them in the Hashtable hash_org
+    /** Read the org conf file and create the Org_rectangle 
+     * and store them in the Hashtable hash_org
      */
     private void make_hash_org() {
 	hash_org = new Hashtable<Integer, Org_rectangle>();
@@ -147,6 +156,8 @@ public class Conf_reader {
     
     /**
       *  Return the rectangle containing a given point (x,y)
+      * @param a chosen point of a rectangle
+      * @return a the rectangle containing a given point
       */
     public Conf_rectangle find_rect(int x, int y) {
 	for (Conf_rectangle cr: hash_map.values()) {
@@ -159,6 +170,8 @@ public class Conf_reader {
     
     /**
       * Get the reaction associated to a rectangle 
+      * @param a rectangle
+      * @return reaction associated to the reactangle
       */
     public String get_reaction_from_rect(Conf_rectangle rect) {
 	Map_rectangle m_rect = hash_map.get(rect.get_hash());
@@ -167,6 +180,8 @@ public class Conf_reader {
 
     /**
       * Return the list of all reaction involving a given gene
+      * @param enter the interesting gene
+      * @return the list of all reaction involving a gene
       */
     public List<String> get_reaction(String gene_interest) {
 	List<String> ret = new ArrayList<String>();
@@ -185,6 +200,8 @@ public class Conf_reader {
     
     /**
       * Return the list of gene involved in a reaction
+      * @param enter the chosen reation
+      * @return the list of all gene involved in the reaction
       */
     public List<String> get_genes_involved(String reaction) {
         // We get the generic rectangle involving the reaction
@@ -200,6 +217,8 @@ public class Conf_reader {
     /**
       * Return True if the given files are the current organism and
       * generic files
+      * @param enter an org file and a map file
+      * @return true or false
       */  
     public boolean check(File o_file, File m_file) {
 	try {
@@ -230,26 +249,30 @@ class Map_rectangle extends Conf_rectangle {
 	
     /**
      * Create a rectangle from a line in the generic conf file
+     * @param enter the line of generic conf file
+     * @return generic conf lines
      */ 
     public static Map_rectangle from_line(String s) {
-	Map_rectangle ret = new Map_rectangle(Conf_rectangle.read_coordonates(s));
-    // Search Knums
-	Pattern knum = Pattern.compile("K[0-9]{5}");
-	Matcher knum_getter = knum.matcher(s);
-	while (knum_getter.find()) { 
-	    ret.k_nums.add(knum_getter.group());
-	}
-    // Search Rnums 
-	Pattern rnum = Pattern.compile("R[0-9]{5}");
-	Matcher rnum_getter = rnum.matcher(s);
-	while (rnum_getter.find()) {
-	    ret.r_nums = (rnum_getter.group());
-	}
-	return ret;
+        Map_rectangle ret = new Map_rectangle(Conf_rectangle.read_coordonates(s));
+        // Search Knums
+        Pattern knum = Pattern.compile("K[0-9]{5}");
+        Matcher knum_getter = knum.matcher(s);
+        while (knum_getter.find()) { 
+            ret.k_nums.add(knum_getter.group());
+        }
+        // Search Rnums 
+        Pattern rnum = Pattern.compile("R[0-9]{5}");
+        Matcher rnum_getter = rnum.matcher(s);
+        while (rnum_getter.find()) {
+            ret.r_nums = (rnum_getter.group());
+        }
+        return ret;
     }
     /**
      * Return True if a given reaction is the one associated 
      * to the rectangle 
+     * @param a chosen reaction
+     * @return true or false
      */
     public boolean has_reacton(String react) {
 	return r_nums.equals(react);
@@ -257,6 +280,7 @@ class Map_rectangle extends Conf_rectangle {
 
     /**
       * Make the rectangle printable
+      * @return associated reaction
       */
     @Override
     public String to_str() {
@@ -277,6 +301,7 @@ class Map_rectangle extends Conf_rectangle {
     }
     /** 
       * return the associated reaction
+      * @return the associated reaction
       */
     public String get_reactions() {
 	return r_nums;
@@ -293,6 +318,8 @@ class Org_rectangle extends Conf_rectangle {
     
     /**
       * Create a rectangle from a line in an organism conf file
+      * @param a line from the organism conf file
+      * @return a list of geneID
       */
     public static Org_rectangle from_line(String s) {
 	Org_rectangle ret = new Org_rectangle(Conf_rectangle.read_coordonates(s));
@@ -310,6 +337,8 @@ class Org_rectangle extends Conf_rectangle {
     
     /**
       * Return True if the given gene is associated to the rectangle
+      * @param enter a chosen gene 
+      * @return true or false
       */
     public boolean has_gene(String gene) {
 	return genes.contains(gene);
@@ -317,6 +346,7 @@ class Org_rectangle extends Conf_rectangle {
     
     /**
       * Return the list of genes associated to rectangles
+      * @return the list of genes associated to rectangles
       */
     public List<String> get_genes() {
 	return new ArrayList<String>(genes);

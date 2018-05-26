@@ -26,6 +26,8 @@ public class FileDescrip {
      * get a url and a file path
      * search the info in the internet using the url
      * store the information in a local file
+     * @param the URL where the info is, the location to save the file 
+     * created
      * */
     private static void download_from_kegg(String url_name , String file_path){
         // search the last reccurence  of the "/" in the file
@@ -77,7 +79,10 @@ public class FileDescrip {
 	}
     /**
      * checks if the information exists locally or should be downloaded 
-     * and returns the file corresponding  */
+     * and returns the file corresponding
+     * @param the URL where the info is, the location of the file if
+     * it's already downloaded
+     * @return the file needed   */
     private static File get_file(String url ,String file_path){
         File f = new File(file_path);
         // if the file exists in the directory then return it
@@ -93,6 +98,8 @@ public class FileDescrip {
     
     /**
      * returns a string with all information in a file
+     * @param the file needed to extract informations
+     * @return a string containing all file lines
      * */
     public static String get_text_from_file(File f) {
         String ret = "";
@@ -110,6 +117,8 @@ public class FileDescrip {
     }
     /**
      * Return a file corresponding to a given gene and specie
+     * @param initials of a wanted specie, the ID of the wanted gene
+     * @return a file with gene information
      * */
     public static File get_gene_info(String specie, String gene_id){
         // create the file_path
@@ -125,6 +134,9 @@ public class FileDescrip {
     }
     /**
      * Return a conf file corresponding to a given pathway and specie
+     * @param initials of a wanted specie, the ID of the wanted pathway 
+     * implicated
+     * @return a file with conf information of a pathway
      * */
     public static File get_org_conf(String specie, String path_id){
         String file_path = ("../data/" + specie + "/conf/" + specie + "_"
@@ -136,7 +148,9 @@ public class FileDescrip {
     }
     
     /**
-     * Return a file with informations of a given reaction 
+     * Return a file with informations of a chosen reaction
+     * @param the ID of a wanted reaction
+     * @return a file with information of the reaction 
      * */
     public static File get_reaction_data(String reaction_id){
         String file_path = ("../data/reaction/" + reaction_id );
@@ -144,7 +158,12 @@ public class FileDescrip {
         
         return get_file(url_name , file_path); 
     }
-
+    
+    /**
+     * Return a file with a map of a chosen reaction
+     * @param the ID of a wanted reaction 
+     * @return an image file showing a map of the reaction 
+     * */
     public static File get_reaction_img(String reaction_id){
         String file_path = ("../data/reaction/image/" + reaction_id );
         String url_name = ("http://rest.kegg.jp/get/rn:" + reaction_id + "/image");
@@ -154,6 +173,8 @@ public class FileDescrip {
     
     /**
      * Return a conf file corresponding to a given pathway map
+     * @param the ID of a chosen map
+     * @return a file with conf information of a pathway map
      * */
     public static File get_map_conf(String map_id){
         String file_path =("../data/map_conf/" + map_id + ".conf");
@@ -165,6 +186,8 @@ public class FileDescrip {
     /**
      * Return an image file of the pathway map corresponding 
      * to a given pathway and specie
+     * @param initials of a wanted specie, the ID of the wanted pathway 
+     * @return an image file of the pathway 
      * */
     public static File get_image_pathway(String specie, String pathway) {
 		String file_path =("../data/"+ specie + "/pathway/" +
