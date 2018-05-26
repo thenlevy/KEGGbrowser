@@ -87,6 +87,10 @@ public class GUI extends JFrame {
     private Reaction_info_display reaction_information;
     private Involved_gene_menu involved_gene_menu;
 
+    /**
+     * Create the GUI.
+     * @param b the browser to which the GUI belongs
+     */
     public GUI(Browser b) {
 	browser = b;
 
@@ -252,6 +256,9 @@ public class GUI extends JFrame {
 	refresh_gui();
 	}
 
+    /**
+     * Ensure the GUI's content is consistent with browser data
+     */
     public void refresh_gui() {
 	gen_species_field.setText(browser.get_gen_species());
 	gen_genID_field.setText(browser.get_gen_genID());
@@ -261,6 +268,9 @@ public class GUI extends JFrame {
 	repaint();
     }
 
+    /**
+     * "Species" text field in genome browser
+     */
     private class Gen_species_field extends JTextField{
 	public Gen_species_field() {
 	    super(GEN_SPECIES_FIELD_LENGTH);
@@ -270,6 +280,9 @@ public class GUI extends JFrame {
 	
     }
 
+    /**
+     * "GeneID" text field in genome browser
+     */
     private class Gen_genID_field extends JTextField {
 	public Gen_genID_field() {
 	    super(GEN_GENID_FIELD_LENGTH);
@@ -278,12 +291,18 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * "Search" button in genome browser
+     */
     private class Gen_search_button extends JButton implements ActionListener {
 	public Gen_search_button() {
 	    super("Search");
 	    addActionListener(this);
 	}
 
+	/**
+	 * Run gen_search in the browser
+	 */
 	public void actionPerformed(ActionEvent e) {
 	    browser.set_gen_species(gen_species_field.getText());
 	    browser.set_gen_genID(gen_genID_field.getText());
@@ -292,6 +311,9 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * "Specie" field in the pathway browser
+     */
     private class Pathway_species_field extends JTextField {
 	public Pathway_species_field() {
 	    super(PATHWAY_SPECIES_FIELD_LENGTH);
@@ -300,6 +322,9 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * "mapID" field in the pathway browser
+     */
     private class Pathway_mapID_field extends JTextField {
 	public Pathway_mapID_field() {
 	    super(PATHWAY_MAPID_FIELD_LENGTH);
@@ -308,12 +333,18 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * "Search" button in the pathway browser
+     */
     private class Pathway_search_button extends JButton implements ActionListener {
 	public Pathway_search_button() {
 	    super("Search");
 	    addActionListener(this);
 	}
 
+	/**
+	 * run pathway_search in the browser
+	 */
 	public void actionPerformed(ActionEvent e) {
 	    browser.set_pathway_species(pathway_species_field.getText());
 	    browser.set_pathway_mapID(pathway_mapID_field.getText());
@@ -322,12 +353,19 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * JScrollPane that shows the genomic context of the gene.
+     */
     private class Genome_display extends JScrollPane {
 	private BrowserPane content;
 	public Genome_display() {
 	    super();
 	}
 
+	/**
+	 * Load and show the page contaning the genomic context.
+	 * @param new_url the url of the page containing the genomic context
+	 */
 	public void update_page(String new_url) {
 	    content = new BrowserPane();
 	    try {
@@ -342,6 +380,9 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * JScrollPane contaning a JTextPane displaying informations.
+     */
     protected class Info_display extends JScrollPane {
 	private JTextPane txt;
 	public Info_display() {
@@ -374,6 +415,9 @@ public class GUI extends JFrame {
     }
 	
 
+    /**
+     * JScrollPane showing the image of a molecular pathway.
+     */
     private class Pathway_display extends JScrollPane {
 	private BufferedImage pathway_img = null;
 	private Pathway_panel panel;
@@ -397,6 +441,9 @@ public class GUI extends JFrame {
 	    
     }
 
+    /**
+     * Clickable and drawable image to interact with the molecular pathway.
+     */
     private class Pathway_panel extends JPanel implements MouseListener {
 	private BufferedImage pathway_img = null;
 	private Rectangle selection = null;
@@ -417,6 +464,9 @@ public class GUI extends JFrame {
 	    repaint();
 	}
 
+	/**
+	 * Draw a rectangle to emphasis selection
+	 */
 	protected void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    Graphics2D g2d = (Graphics2D) g.create();
@@ -437,6 +487,9 @@ public class GUI extends JFrame {
 		    : new Dimension(pathway_img.getWidth(), pathway_img.getHeight()));
 	}
 
+	/**
+	 * Set selected rectangle
+	 */
 	public void set_selection(Conf_rectangle rect) {
 	    selection = new Rectangle(rect.get_left() - selection_thickness,
 				      rect.get_top() - selection_thickness,
@@ -454,6 +507,9 @@ public class GUI extends JFrame {
 
 	public void mouseExited(MouseEvent e) { }
 
+	/**
+	 * Send information about click location to the browser.
+	 */
 	public void mouseClicked(MouseEvent e) {
 	    browser.click_on_rectangle(e.getX(), e.getY());
 	}
@@ -461,6 +517,9 @@ public class GUI extends JFrame {
 	    
 
 	
+    /**
+     * Clickable list of gene or reaction.
+     */
     private abstract class Kegg_menu extends JScrollPane implements ListSelectionListener {
 	protected JList reaction_jlist;
 	public Kegg_menu() {
@@ -508,36 +567,66 @@ public class GUI extends JFrame {
 	}
     }
 
+    /**
+     * Update the content of gene_reaction_menu
+     * @param lst the list of possible reactions
+     */
     public void set_gene_reaction_menu(List<String> lst) {
 	involved_in_reactions.set_list(lst);
     }
 
+    /**
+     * Update the content of involved_gene_menu
+     * @param lst the list of possible genes
+     */
     public void set_involved_gene_menu(List<String> lst) {
 	involved_gene_menu.set_list(lst);
     }
 
+    /**
+     * Set the content of gene_information
+     * @param new_text the new text to be displayed
+     */
     public void set_gene_info_text(String new_text) {
 	    gene_information.set_text(new_text);
     }
 
+    /**
+     * Set the content of reaction_information
+     * @param new_text the new text to be displayed
+     */
     public void set_reaction_info(String new_text) {
 	reaction_information.set_text(new_text);
     }
 
+    /**
+     * Set the url of genome_display
+     */
     public void set_browser_url(String new_url) {
 	genome_display.update_page(new_url);
 	genome_display.update_page(null);
 	genome_display.update_page(new_url);
     }
 
+    /**
+     * Set the image of pathway_display
+     * @param img the File object containing the image
+     */
     public void update_pathway_img(File img) {
 	pathway_display.change_img(img);
     }
 
+    /**
+     * Set the selection in pathway display
+     * @param rect the rectangle to be selected
+     */
     public void select_rectangle(Conf_rectangle rect) {
 	pathway_display.set_selection(rect);
     }
 
+    /**
+     * "Image" button in pathway browser
+     */
     class Image_button extends JButton implements ActionListener {
 	public Image_button() {
 	    super("Image");
@@ -550,6 +639,10 @@ public class GUI extends JFrame {
     }
 	
 
+    /**
+     * pop an image over the main frame
+     * @param img_file the file object containg the image to be displayed
+     */
     public void popup_image(File img_file) {
 	JDialog popup = new JDialog();
 	JLabel label = new JLabel(new ImageIcon(img_file.getAbsolutePath()));
