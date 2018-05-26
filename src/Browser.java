@@ -19,6 +19,9 @@ public class Browser {
     private List<String> reaction_list;
     private List<String> involved_genes_list;
 
+    /**
+     * Create the browser object
+     */
     public Browser() {
 	gen_species = "...";
 	gen_genID = ".....";
@@ -29,6 +32,10 @@ public class Browser {
 	gui = new GUI(this);
     }
 
+    /**
+     * Create the browser object, possibly in debug mode
+     * @param b whether the debug mode should be activated or not
+     */
     public Browser(boolean b) {
 	this();
 	debug_mode = b;
@@ -66,6 +73,11 @@ public class Browser {
 	return pathway_mapID;
     }
 
+    /**
+     * Search and display all information about current gene.
+     * Update the webpage in the genome browser, the list of reaction involing gene
+     * and the information about the gene.
+     */
     public void gen_search() {
 	if (debug_mode) {
 	    System.out.println("Genome Browser Search " + gen_species + " " + gen_genID);
@@ -82,6 +94,10 @@ public class Browser {
 	gui.refresh_gui();
     }
 
+    /**
+     * Search and display all information about current pathway.
+     * Update the pathway image.
+     */
     public void pathway_search() {
 	if (debug_mode) {
 	    System.out.println("Pathway Browser Search " + pathway_species + " " + pathway_mapID);
@@ -89,19 +105,29 @@ public class Browser {
 	update_pathway(pathway_species + pathway_mapID);
     }
 
+    /**
+     * Display the image of the current reaction
+     */
     public void image() {
-	// TODO implement this function
 	if (debug_mode) {
 	    System.out.println("Image button pressed" + reaction);
 	}
 	gui.popup_image(FileDescrip.get_reaction_img(reaction));
     }
 
+    /**
+     * Change conf_files if necessary
+     */
     public void set_conf(File org_file, File map_file) {
 	if (conf_reader == null || !conf_reader.check(org_file, map_file))
 	    conf_reader = new Conf_reader(org_file, map_file);
     }
 
+    /**
+     * Determine wether an action is to be performed when the user clicked on
+     * the pathway image.
+     * @param (x,y) the coordonates of the point where the user clicked
+     */
     public void click_on_rectangle(int x, int y) {
 	Conf_rectangle rect = conf_reader.find_rect(x, y);
 	if (rect.is_true_rectangle()) {
@@ -117,6 +143,9 @@ public class Browser {
 	}
     }
 
+    /**
+     * Update the selected reaction when the user click on the reaction list.
+     */
     public void select_reaction(int index) {
 	if (debug_mode) {
 	    System.out.println("Selected index " + index);
@@ -131,6 +160,9 @@ public class Browser {
 	}
     }
 
+    /**
+     * Update the selected gene when the user clid on the gene list
+     */
     public void select_gene(int index) {
 	if (debug_mode) {
 	    System.out.println("Selected index " + index);
@@ -144,6 +176,9 @@ public class Browser {
 	}
     }
 
+    /**
+     * Update the reaction, and the gene involed list.
+     */
     private void update_reaction(String reaction, String pathway) {
 	int specie_name_length = pathway.length() - 5;
 	pathway_species = pathway.substring(0, specie_name_length);
@@ -161,6 +196,9 @@ public class Browser {
     }
 	
 
+    /**
+     * Update the current pathway.
+     */
     private void update_pathway(String pathway) {
 	if (!displayed_pathway.equals(pathway)) {
 	    gui.update_pathway_img(FileDescrip.get_image_pathway(pathway_species, pathway_mapID));
